@@ -1,0 +1,50 @@
+{
+  "name": "canvest",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A unit testing framework for HTML5 canvas",
+  "main": "index.js",
+  "prettier": {
+    "useTabs": true,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "parser": "flow"
+  },
+  "scripts": {
+    "build": "lerna exec -- npm run build",
+    "linkall": "lerna exec -- npm i && lerna link",
+    "lint": "lerna exec -- npm run lint",
+    "test": "lerna exec -- npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TyrealGray/Canvest.git"
+  },
+  "keywords": [
+    "canvas",
+    "unit-test"
+  ],
+  "author": "TyrealGray",
+  "license": "AFL-3.0",
+  "bugs": {
+    "url": "https://github.com/TyrealGray/Canvest/issues"
+  },
+  "homepage": "https://github.com/TyrealGray/Canvest#readme",
+  "devDependencies": {
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.8.7",
+    "@babel/polyfill": "7.8.7",
+    "@babel/preset-env": "7.8.7",
+    "@babel/preset-flow": "7.8.3",
+    "@babel/register": "7.8.6",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.0.6",
+    "core-js": "3.6.0",
+    "eslint": "5.16.0",
+    "lerna": "^3.20.2",
+    "prettier": "^2.0.4"
+  }
+}

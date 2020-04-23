@@ -1,0 +1,28 @@
+{
+  "name": "@canvest/canvest-core",
+  "version": "0.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "A unit testing framework for HTML5 canvas",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ./src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TyrealGray/Canvest.git"
+  },
+  "keywords": [
+    "canvas",
+    "unit-test",
+    "canvest"
+  ],
+  "author": "TyrealGray",
+  "license": "AFL-3.0",
+  "bugs": {
+    "url": "https://github.com/TyrealGray/Canvest/issues"
+  },
+  "homepage": "https://github.com/TyrealGray/Canvest#readme"
+}

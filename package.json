@@ -15,7 +15,8 @@
   },
   "scripts": {
     "build": "lerna exec -- npm run build",
-    "linkall": "lerna exec -- npm i && lerna link",
+    "cli": "cd packages/canvest-cli && npm run dev",
+    "linkall": "lerna exec -- npm i && lerna link --force-local",
     "lint": "lerna exec -- npm run lint",
     "test": "lerna exec -- npm run test"
   },
@@ -36,19 +37,15 @@
   "devDependencies": {
     "@babel/cli": "7.8.4",
     "@babel/core": "7.8.7",
+    "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/polyfill": "7.8.7",
     "@babel/preset-env": "7.8.7",
-    "@babel/preset-flow": "7.8.3",
     "@babel/register": "7.8.6",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.0.6",
     "core-js": "3.6.0",
     "eslint": "5.16.0",
-    "jest": "^25.4.0",
     "lerna": "^3.20.2",
-    "prettier": "^2.0.4",
-    "webpack": "4.42.1",
-    "webpack-cli": "3.3.11",
-    "webpack-dev-server": "3.10.3"
+    "prettier": "^2.0.4"
   }
 }

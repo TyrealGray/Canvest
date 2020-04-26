@@ -1,3 +1,5 @@
+
+
 export const snapshot = (canvas, clone) => {
 	try {
 		if (clone) {
@@ -17,7 +19,7 @@ export const snapshot = (canvas, clone) => {
 				);
 			}
 
-			return clone.toDataURL('image/png');
+			return clone.toDataURL();
 		}
 	} catch (e) {
 		console.error(`snapshot canvas failed, ${e}`);

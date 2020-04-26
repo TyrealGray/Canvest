@@ -7,6 +7,7 @@
   "description": "A unit testing framework for HTML5 canvas",
   "main": "src/index.js",
   "scripts": {
+    "dev": "canvest",
     "lint": "eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
+    "@canvest/canvest-dev-server": "0.0.1",
     "open": "^7.0.3"
   }
 }

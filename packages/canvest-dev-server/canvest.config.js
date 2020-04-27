@@ -1,5 +1,5 @@
 const path = require('path');
-//const fs = require('fs-extra')
+const fs = require('fs-extra')
 
 const defaultBabelOptions = {
 	presets: ['@babel/preset-env'],
@@ -9,6 +9,14 @@ const defaultBabelOptions = {
 		},
 	},
 };
+
+let scriptLoaderPath = null;
+if(fs.existsSync(path.join(__dirname,'node_modules','script-loader'))){
+	scriptLoaderPath = path.join(__dirname,'node_modules','script-loader')
+}
+else {
+	scriptLoaderPath = path.join(process.cwd(),'node_modules','script-loader');
+}
 
 //...JSON.parse(fs.readFileSync(path.resolve(__dirname, '../.babelrc'))),
 
@@ -34,7 +42,7 @@ module.exports = {
 			},
 			{
 				test: /\.exec\.js$/,
-				use: [ path.join(__dirname,'node_modules','script-loader') ]
+				use: [ scriptLoaderPath ]
 			}
 		],
 	},

@@ -1,9 +1,12 @@
 {
   "name": "@canvest/canvest-core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "bin"
+  ],
   "description": "A unit testing framework for HTML5 canvas",
   "main": "src/index.js",
   "scripts": {

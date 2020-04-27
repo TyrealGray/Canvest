@@ -1,6 +1,6 @@
 {
   "name": "@canvest/canvest-dev-server",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publishConfig": {
     "access": "public"
   },
@@ -23,7 +23,9 @@
   "engines": {
     "node": ">= 6.11.5"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "exit 0"
+  },
   "dependencies": {
     "ansi-html": "0.0.7",
     "bonjour": "^3.5.0",
@@ -46,7 +48,6 @@
     "p-retry": "^3.0.1",
     "portfinder": "^1.0.25",
     "schema-utils": "^1.0.0",
-    "script-loader": "^0.7.2",
     "selfsigned": "^1.10.7",
     "semver": "^6.3.0",
     "serve-index": "^1.9.1",
@@ -64,10 +65,10 @@
     "yargs": "12.0.5"
   },
   "peerDependencies": {
-    "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
-    "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "core-js": "^3.0.0",
     "babel-loader": "^8.0.0"
   },
   "author": "TyrealGray",

@@ -1,27 +1,28 @@
 const path = require('path');
-const fs = require('fs-extra')
+const fs = require('fs-extra');
 
-const defaultBabelOptions = {
-	presets: ['@babel/preset-env'],
-	env: {
-		test: {
-			plugins: ['@babel/plugin-transform-runtime'],
-		},
-	},
+let defaultBabelOptions = {
+	presets: [
+		[
+			"@babel/preset-env",
+			{
+				useBuiltIns: "usage",
+				corejs: 3
+			}
+		]
+	]
 };
 
-let scriptLoaderPath = null;
-if(fs.existsSync(path.join(__dirname,'node_modules','script-loader'))){
-	scriptLoaderPath = path.join(__dirname,'node_modules','script-loader')
-}
-else {
-	scriptLoaderPath = path.join(process.cwd(),'node_modules','script-loader');
+if (fs.existsSync(path.join(process.cwd(), '.babelrc'))) {
+	defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc')));
 }
 
-//...JSON.parse(fs.readFileSync(path.resolve(__dirname, '../.babelrc'))),
+if(fs.existsSync(path.join(process.cwd(), '.babelrc.json'))) {
+	defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc.json')));
+}
 
 module.exports = {
-	entry: [path.join(__dirname, './script/init.js'),path.join(__dirname, './script/run.js')],
+	entry: path.join(__dirname, './script/run.js'),
 	devtool: 'inline-source-map',
 	mode: 'development',
 	output: {
@@ -29,20 +30,16 @@ module.exports = {
 		path: __dirname,
 	},
 	devServer: {
-		contentBase: path.join(__dirname),
+		contentBase: [path.join(__dirname), path.join(process.cwd())],
 		open: true,
 	},
 	module: {
 		rules: [
 			{
 				test: /\.m?js$/,
-				exclude: /(node_modules)/,
+				exclude: /(node_modules|canvest-dev-server\/client)/,
 				loader: 'babel-loader',
 				options: defaultBabelOptions,
-			},
-			{
-				test: /\.exec\.js$/,
-				use: [ scriptLoaderPath ]
 			}
 		],
 	},

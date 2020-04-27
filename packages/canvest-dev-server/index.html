@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>canvest test</title>
-    <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+    <title>Canvest test</title>
+    <link rel="stylesheet" href="./mocha/mocha.css" />
 </head>
 <body>
 <div id="mocha"></div>
-<script type="text/javascript">
-    var expect = null;
+<script type="text/javascript" src="./mocha/chai.exec.js"></script>
+<script type="text/javascript" src="./mocha/mocha.exec.js"></script>
+<script>
+	mocha.setup('bdd');
+
+	var expect = chai.expect;
 </script>
 <script type="text/javascript" src="./index.js"></script>
 </body>

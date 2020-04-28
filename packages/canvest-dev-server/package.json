@@ -27,6 +27,7 @@
     "build": "exit 0"
   },
   "dependencies": {
+    "@canvest/canvest-core": "0.0.2",
     "ansi-html": "0.0.7",
     "bonjour": "^3.5.0",
     "chokidar": "^2.1.8",

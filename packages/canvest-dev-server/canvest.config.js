@@ -22,7 +22,7 @@ if(fs.existsSync(path.join(process.cwd(), '.babelrc.json'))) {
 }
 
 module.exports = {
-	entry: path.join(__dirname, './script/run.js'),
+	entry: [path.join(__dirname, './script/init.js'), path.join(__dirname, './script/run.js')],
 	devtool: 'inline-source-map',
 	mode: 'development',
 	output: {

@@ -12,6 +12,7 @@
   "scripts": {
     "build": "babel ./src -d bin --copy-files",
     "lint": "eslint ./src",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

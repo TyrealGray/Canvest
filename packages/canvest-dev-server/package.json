@@ -24,7 +24,8 @@
     "node": ">= 6.11.5"
   },
   "scripts": {
-    "build": "exit 0"
+    "build": "exit 0",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@canvest/canvest-core": "0.0.2",

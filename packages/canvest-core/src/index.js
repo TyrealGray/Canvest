@@ -3,7 +3,7 @@
  * @param {(ArrayBuffer|ArrayBufferView)} a
  * @param {(ArrayBuffer|ArrayBufferView)} b
  */
-export function equal(a, b) {
+export function isPixelEqual(a, b) {
 	if (a instanceof ArrayBuffer) a = new Uint8Array(a, 0);
 	if (b instanceof ArrayBuffer) b = new Uint8Array(b, 0);
 	if (a.byteLength !== b.byteLength) return false;

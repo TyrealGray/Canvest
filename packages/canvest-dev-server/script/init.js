@@ -1,3 +1,3 @@
-import { snapshot as s, isPixelEqual as p } from '@canvest/canvest-core';
-snapshot = s;
-isPixelEqual = p;
+import { snapshot, isPixelEqual } from '@canvest/canvest-core';
+window.snapshot = snapshot;
+window.isPixelEqual = isPixelEqual;

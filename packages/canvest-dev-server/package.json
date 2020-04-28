@@ -1,6 +1,6 @@
 {
   "name": "@canvest/canvest-dev-server",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publishConfig": {
     "access": "public"
   },
@@ -28,7 +28,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@canvest/canvest-core": "0.0.2",
+    "@canvest/canvest-core": "^0.0.3",
     "ansi-html": "0.0.7",
     "bonjour": "^3.5.0",
     "chokidar": "^2.1.8",
@@ -68,10 +68,10 @@
   },
   "peerDependencies": {
     "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
-    "core-js": "^3.0.0",
-    "babel-loader": "^8.0.0"
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.0",
+    "core-js": "^3.0.0"
   },
   "author": "TyrealGray",
   "license": "AFL-3.0",

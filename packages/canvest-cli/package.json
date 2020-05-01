@@ -1,6 +1,6 @@
 {
   "name": "@canvest/canvest-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publishConfig": {
     "access": "public"
   },
@@ -29,6 +29,6 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
-    "@canvest/canvest-dev-server": "0.0.6"
+    "@canvest/canvest-dev-server": "^0.0.7"
   }
 }

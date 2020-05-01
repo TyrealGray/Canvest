@@ -8,7 +8,7 @@
     "bin"
   ],
   "description": "A unit testing framework for HTML5 canvas",
-  "main": "src/index.js",
+  "main": "bin/index.js",
   "scripts": {
     "build": "babel ./src -d bin --copy-files",
     "lint": "eslint ./src",

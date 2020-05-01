@@ -11,8 +11,10 @@
 <script type="text/javascript" src="./mocha/mocha.exec.js"></script>
 <script>
 	mocha.setup('bdd');
+	mocha.timeout(20000);
 
 	var expect = chai.expect;
+	var assert = chai.assert;
 	var snapShot = null;
 	var isPixelEqual = null;
 </script>

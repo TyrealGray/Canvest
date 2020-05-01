@@ -29,7 +29,6 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
-    "@canvest/canvest-dev-server": "0.0.1",
-    "open": "^7.0.3"
+    "@canvest/canvest-dev-server": "0.0.6"
   }
 }

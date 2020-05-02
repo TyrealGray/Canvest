@@ -1,14 +1,22 @@
 #!/usr/bin/env node
+const path = require('path');
 const argv = require('yargs').argv;
-const processRunNode = require('./src/processUtil').processRunNode;
+const processUtil = require('./src/processUtil');
+const createScirpt = require('./src/createScirpt');
 
 (async () => {
-	const cmd = ['./node_modules/@canvest/canvest-dev-server/bin/canvest-dev-server.js'];
+
+	createScirpt.createInitScript();
+
+	const cmd = ['./node_modules/webpack-dev-server/bin/webpack-dev-server.js'];
+
+	cmd.push(...['--config',path.join(__dirname,'./canvest.config.js')]);
+
 	if (!argv.debug) {
 		cmd.push('--quiet');
 	}
 
-	await processRunNode(
+	await processUtil.processRunNode(
 		cmd,
 		process.cwd(),
 	);

@@ -5,4 +5,4 @@ coverage
 *.log
 packages/canvest-cli/bin
 packages/canvest-core/bin
-packages/canvest-dev-server/script/run.js
+packages/canvest-cli/script/run.js

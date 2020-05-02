@@ -31,7 +31,7 @@ module.exports = {
 		path: __dirname,
 	},
 	devServer: {
-		contentBase: [path.join(__dirname), path.join(process.cwd())],
+		contentBase: [path.join(process.cwd())],
 		open: true
 	},
 	module: {

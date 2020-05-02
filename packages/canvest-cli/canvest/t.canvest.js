@@ -1,5 +1,5 @@
-describe('aaaa', function () {
-	it('should return -1 when not present', function() {
+describe('js', function () {
+	it('should pass', function() {
 		expect(1).to.equal(1);
 	});
 });

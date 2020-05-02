@@ -11,7 +11,11 @@
   "main": "index.js",
   "files": [
     "src",
-    "index.js"
+    "script",
+    "mocha",
+    "index.js",
+    "index.html",
+    "canvest.config.js"
   ],
   "scripts": {
     "build": "exit 0",

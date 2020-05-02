@@ -1,6 +1,6 @@
 {
   "name": "@canvest/canvest-dev-server",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publishConfig": {
     "access": "public"
   },
@@ -25,7 +25,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@canvest/canvest-core": "^0.0.4",
+    "@canvest/canvest-core": "^0.0.5",
     "ansi-html": "0.0.7",
     "bonjour": "^3.5.0",
     "chokidar": "^2.1.8",

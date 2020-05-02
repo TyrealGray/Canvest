@@ -22,6 +22,12 @@ if(fs.existsSync(path.join(process.cwd(), '.babelrc.json'))) {
 	defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc.json')));
 }
 
+const contentBase = [__dirname];
+
+if(__dirname !== process.cwd()){
+	contentBase.push(process.cwd());
+}
+
 module.exports = {
 	entry: [path.join(__dirname, './script/init.js'), path.join(__dirname, './script/run.js')],
 	devtool: 'inline-source-map',
@@ -31,7 +37,7 @@ module.exports = {
 		path: __dirname,
 	},
 	devServer: {
-		contentBase: [path.join(process.cwd())],
+		contentBase: contentBase,
 		open: true
 	},
 	module: {

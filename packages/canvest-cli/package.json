@@ -5,13 +5,18 @@
     "access": "public"
   },
   "description": "A unit testing framework for HTML5 canvas",
-  "main": "src/index.js",
+  "bin":{
+    "canvest": "src/index.js"
+  },
+  "files": [
+    "src"
+  ],
   "scripts": {
     "build": "exit 0",
-    "dev": "canvest",
-    "lint": "eslint ./src",
+    "canvest": "./node_modules/@canvest/canvest-dev-server/bin/canvest-dev-server.js",
+    "lint": "exit 0",
     "prepublishOnly": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "exit 0"
   },
   "repository": {
     "type": "git",
@@ -29,6 +34,7 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
-    "@canvest/canvest-dev-server": "^0.0.7"
+    "@canvest/canvest-dev-server": "^0.0.7",
+    "yargs": "^15.3.1"
   }
 }

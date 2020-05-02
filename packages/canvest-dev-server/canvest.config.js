@@ -32,6 +32,7 @@ module.exports = {
 	devServer: {
 		contentBase: [path.join(__dirname), path.join(process.cwd())],
 		open: true,
+		quiet: true
 	},
 	module: {
 		rules: [
@@ -42,5 +43,5 @@ module.exports = {
 				options: defaultBabelOptions,
 			}
 		],
-	},
+	}
 };

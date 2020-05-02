@@ -1,4 +1,8 @@
-export function isPixelEqual(snapshotA, snapshotB) {
+function containPixel(snapshotA, snapshotB, rate){
+
+}
+
+const isPixelEqual = (snapshotA, snapshotB) => {
 
 	let a = snapshotA.buffer, b = snapshotB.buffer;
 
@@ -10,7 +14,7 @@ export function isPixelEqual(snapshotA, snapshotB) {
 	if (aligned16(a) && aligned16(b))
 		return equal16(a, b);
 	return equal8(a, b);
-}
+};
 
 function equal8(a, b) {
 	const ua = new Uint8Array(a.buffer, a.byteOffset, a.byteLength);
@@ -60,9 +64,23 @@ const captureImage = (canvas, cloneCanvas) => {
 			);
 		}
 
+		const captureId = Math.random();
+		const buffer = cloneCtx.getImageData(0, 0, canvas.width, canvas.height).data.buffer;
+		const dataURL = cloneCanvas.toDataURL();
+		const contain = (capture) => {
+			console.log(`${captureId} should contain ${capture.captureId}`);
+		};
+
+		const equal = (capture) => {
+			return isPixelEqual({buffer},capture);
+		};
+
 		return {
-			buffer: cloneCtx.getImageData(0, 0, canvas.width, canvas.height).data.buffer,
-			dataURL: cloneCanvas.toDataURL()
+			captureId,
+			buffer,
+			dataURL,
+			contain,
+			equal
 		};
 	} catch (e) {
 		throw e;

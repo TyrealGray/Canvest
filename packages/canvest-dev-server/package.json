@@ -5,9 +5,6 @@
     "access": "public"
   },
   "description": "A unit testing framework for HTML5 canvas",
-  "bin": {
-    "canvest": "bin/canvest-dev-server.js"
-  },
   "main": "lib/Server.js",
   "files": [
     "bin",

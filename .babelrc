@@ -4,6 +4,7 @@
       "@babel/preset-env",
       {
         "useBuiltIns": "usage",
+        "modules":"umd",
         "corejs": "3"
       }
     ]

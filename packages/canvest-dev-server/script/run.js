@@ -1,1 +1,1 @@
-import '/Users/tyrealgray/GithubProjects/Canvest/packages/canvest-cli/canvest/test.canvest';mocha.run();
+import '/Users/tyrealgray/GithubProjects/Canvest/packages/canvest-cli/canvest/t.canvest';mocha.run();

@@ -1,6 +1,7 @@
 #node.js
 node_modules/*
 /.idea
-bin
 coverage
 *.log
+packages/canvest-cli/bin
+packages/canvest-core/bin

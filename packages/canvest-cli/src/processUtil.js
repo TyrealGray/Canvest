@@ -1,25 +1,39 @@
 const spawn = require('child_process').spawn;
-async function processRunNPM(cmd, cwd){
+
+function processRun(prefix, cmd, cwd){
 	return new Promise((resolve, reject) => {
 
-		const outputLog = spawn(/^win/.test(process.platform) ? "npm.cmd" : "npm", cmd, {
+		const logger = spawn(prefix, cmd, {
 			cwd: cwd,
 			stdio: 'inherit',
 		});
 
-		outputLog.on('message',  (data) => {
+		logger.on('message',  (data) => {
 			process.stdout.clearLine();
 			process.stdout.cursorTo(0);
 			process.stdout.write(data);
 		});
 
-		outputLog.on('error',  (err) => {
+		logger.on('error',  (err) => {
 			reject(err)
 		});
-		outputLog.on('close',  (code) =>{
+		logger.on('close',  (code) =>{
 			resolve(code);
 		});
 	});
 }
 
+async function processRunNode(cmd, cwd){
+
+	return processRun("node",cmd,cwd);
+}
+
+async function processRunNPM(cmd, cwd){
+	const prefix = /^win/.test(process.platform) ? "npm.cmd" : "npm";
+
+	return processRun(prefix,cmd,cwd);
+}
+
 exports.processRunNPM = processRunNPM;
+
+exports.processRunNode = processRunNode;

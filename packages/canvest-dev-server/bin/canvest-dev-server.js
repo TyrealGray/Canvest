@@ -84,6 +84,8 @@ const config = require(convertArgvPath)(yargs, {...argv, config: './node_modules
 	outputFilename: '/bundle.js',
 });
 
+config.devServer.quiet = argv.quiet? true : false;
+
 function findInDir (dir, filter, fileList = []) {
 	const files = fs.readdirSync(dir);
 
@@ -96,14 +98,14 @@ function findInDir (dir, filter, fileList = []) {
 		} else if (filter.test(filePath)) {
 			let relativePath = filePath.replace(process.cwd(),'');
 
-			fileList.push(relativePath.replace('.canvest.js','.canvest'));
+			fileList.push(relativePath.replace(/\.canvest.(js|jsx|ts|tsx)$/,'.canvest'));
 		}
 	});
 
 	return fileList;
 }
 
-const canvestFiles = findInDir(path.join(process.cwd(),'./canvest/'),/\.canvest.js/);
+const canvestFiles = findInDir(path.join(process.cwd(),'./canvest/'),/\.canvest.(js|jsx|ts|tsx)$/);
 
 let importTests = '';
 canvestFiles.map((canvestFile) => {

@@ -8,8 +8,9 @@ let defaultBabelOptions = {
 			{
 				useBuiltIns: "usage",
 				corejs: 3
-			}
-		]
+			},
+		],
+		"@babel/preset-typescript"
 	]
 };
 
@@ -31,17 +32,19 @@ module.exports = {
 	},
 	devServer: {
 		contentBase: [path.join(__dirname), path.join(process.cwd())],
-		open: true,
-		quiet: true
+		open: true
 	},
 	module: {
 		rules: [
 			{
-				test: /\.m?js$/,
+				test: /\.(js|jsx|tsx|ts)$/,
 				exclude: /(node_modules|canvest-dev-server\/client)/,
 				loader: 'babel-loader',
 				options: defaultBabelOptions,
 			}
 		],
-	}
+	},
+	resolve: {
+		extensions: ['*', '.js', '.jsx', '.tsx', '.ts'],
+	},
 };

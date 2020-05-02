@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 const argv = require('yargs').argv;
 const processRunNode = require('./src/processUtil').processRunNode;
-const processRunNPM = require('./src/processUtil').processRunNPM;
 
 (async () => {
-	if (argv.ts) {
-		await processRunNPM(['run','tsc', './canvest/*.ts'], process.cwd());
-		console.log('convert to js testing files ready.')
+	const cmd = ['./node_modules/@canvest/canvest-dev-server/bin/canvest-dev-server.js'];
+	if (!argv.debug) {
+		cmd.push('--quiet');
 	}
-	await processRunNode(['./node_modules/@canvest/canvest-dev-server/bin/canvest-dev-server.js'], process.cwd());
+
+	await processRunNode(
+		cmd,
+		process.cwd(),
+	);
 })();

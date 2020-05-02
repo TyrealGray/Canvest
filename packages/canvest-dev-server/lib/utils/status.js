@@ -9,8 +9,8 @@ function status(uri, options, log, useColor) {
   if (options.quiet === true) {
     // Add temporary logger to output just the status of the dev server
     log = logger({
-      name: 'wds',
-      level: 'info',
+      name: 'cds',
+      level: 'warn',
       timestamp: options.logTime,
     });
   }
@@ -26,12 +26,12 @@ function status(uri, options, log, useColor) {
   }
 
   log.info(
-    `webpack output is served from ${colors.info(useColor, options.publicPath)}`
+    `canvest output is served from ${colors.info(useColor, options.publicPath)}`
   );
 
   if (contentBase) {
     log.info(
-      `Content not from webpack is served from ${colors.info(
+      `Content not from canvest is served from ${colors.info(
         useColor,
         contentBase
       )}`

@@ -6,10 +6,12 @@
   },
   "description": "A unit testing framework for HTML5 canvas",
   "bin": {
-    "canvest": "src/index.js"
+    "canvest": "index.js"
   },
+  "main": "index.js",
   "files": [
-    "src"
+    "src",
+    "index.js"
   ],
   "scripts": {
     "build": "exit 0",

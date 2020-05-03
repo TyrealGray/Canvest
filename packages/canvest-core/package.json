@@ -29,5 +29,8 @@
   "bugs": {
     "url": "https://github.com/TyrealGray/Canvest/issues"
   },
-  "homepage": "https://github.com/TyrealGray/Canvest#readme"
+  "homepage": "https://github.com/TyrealGray/Canvest#readme",
+  "dependencies": {
+    "pixelmatch": "^5.2.0"
+  }
 }

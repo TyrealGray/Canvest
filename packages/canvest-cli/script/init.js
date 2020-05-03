@@ -11,12 +11,12 @@ window.snapshot = (canvasView) => {
 				expect(capture.equal(otherCapture)).to.equal(false);
 			};
 
-			capture.isContain = (otherCapture) => {
-				// expect(capture.contain(otherCapture)).to.equal(true);
+			capture.isMatch = (otherCapture, rate) => {
+				expect(capture.match(otherCapture, rate)).to.equal(true);
 			};
 
-			capture.notContain = (otherCapture) => {
-				// expect(capture.contain(otherCapture)).to.equal(false);
+			capture.notMatch = (otherCapture, rate) => {
+				expect(capture.match(otherCapture, rate)).to.equal(false);
 			};
 
 			resolve(capture);

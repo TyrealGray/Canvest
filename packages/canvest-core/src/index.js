@@ -1,53 +1,13 @@
-function containPixel(snapshotA, snapshotB, rate){
+import * as pixelmatch from 'pixelmatch';
 
-}
+const isPixelMatch = (dataA, dataB, width, height, rate) => {
 
-const isPixelEqual = (snapshotA, snapshotB) => {
+	const diff = pixelmatch(dataA, dataB, null, width, height, {threshold: 0.5});
 
-	let a = snapshotA.buffer, b = snapshotB.buffer;
+	const tolerateDiff = parseFloat(width * height) * rate;
 
-	if (a instanceof ArrayBuffer) a = new Uint8Array(a, 0);
-	if (b instanceof ArrayBuffer) b = new Uint8Array(b, 0);
-	if (a.byteLength !== b.byteLength) return false;
-	if (aligned32(a) && aligned32(b))
-		return equal32(a, b);
-	if (aligned16(a) && aligned16(b))
-		return equal16(a, b);
-	return equal8(a, b);
+	return diff <= parseInt(tolerateDiff);
 };
-
-function equal8(a, b) {
-	const ua = new Uint8Array(a.buffer, a.byteOffset, a.byteLength);
-	const ub = new Uint8Array(b.buffer, b.byteOffset, b.byteLength);
-	return compare(ua, ub);
-}
-
-function equal16(a, b) {
-	const ua = new Uint16Array(a.buffer, a.byteOffset, a.byteLength / 2);
-	const ub = new Uint16Array(b.buffer, b.byteOffset, b.byteLength / 2);
-	return compare(ua, ub);
-}
-
-function equal32(a, b) {
-	const ua = new Uint32Array(a.buffer, a.byteOffset, a.byteLength / 4);
-	const ub = new Uint32Array(b.buffer, b.byteOffset, b.byteLength / 4);
-	return compare(ua, ub);
-}
-
-function compare(a, b) {
-	for (let i = a.length; -1 < i; i -= 1) {
-		if ((a[i] !== b[i])) return false;
-	}
-	return true;
-}
-
-function aligned16(a) {
-	return (a.byteOffset % 2 === 0) && (a.byteLength % 2 === 0);
-}
-
-function aligned32(a) {
-	return (a.byteOffset % 4 === 0) && (a.byteLength % 4 === 0);
-}
 
 const captureImage = (canvas, cloneCanvas) => {
 	try {
@@ -64,22 +24,19 @@ const captureImage = (canvas, cloneCanvas) => {
 			);
 		}
 
-		const captureId = Math.random();
-		const buffer = cloneCtx.getImageData(0, 0, canvas.width, canvas.height).data.buffer;
-		const dataURL = cloneCanvas.toDataURL();
-		const contain = (capture) => {
-			console.log(`${captureId} should contain ${capture.captureId}`);
-		};
+		const imageData = cloneCtx.getImageData(0, 0, canvas.width, canvas.height).data;
 
 		const equal = (capture) => {
-			return isPixelEqual({buffer},capture);
+			return isPixelMatch(imageData,capture.imageData, canvas.width, canvas.height, 0);
+		};
+
+		const match = (capture, rate) => {
+			return isPixelMatch(imageData,capture.imageData, canvas.width, canvas.height, rate);
 		};
 
 		return {
-			captureId,
-			buffer,
-			dataURL,
-			contain,
+			imageData,
+			match,
 			equal
 		};
 	} catch (e) {
@@ -108,9 +65,10 @@ export const snapshot = (canvas) => {
 				if (captures.length < 3) {
 					captures.push(capture);
 				} else {
-					if (isPixelEqual(captures[0], captures[1])
-						&& isPixelEqual(captures[1], captures[2])
-						&& isPixelEqual(captures[2], capture)) {
+					if (captures[0].equal(captures[1])
+						&& captures[1].equal(captures[2])
+						&& captures[2].equal(capture)
+					) {
 
 						return resolve({...capture});
 					} else {

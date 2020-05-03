@@ -1,4 +1,4 @@
-import {pixelmatch} from 'pixelmatch';
+import pixelmatch from 'pixelmatch';
 
 const isPixelMatch = (dataA, dataB, width, height, rate) => {
 

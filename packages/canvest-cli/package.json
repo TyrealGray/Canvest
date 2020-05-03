@@ -1,6 +1,6 @@
 {
   "name": "@canvest/canvest-cli",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "publishConfig": {
     "access": "public"
   },
@@ -44,7 +44,7 @@
     "@babel/polyfill": "7.8.7",
     "@babel/preset-env": "7.8.7",
     "@babel/preset-typescript": "^7.9.0",
-    "@canvest/canvest-core": "^0.0.5",
+    "@canvest/canvest-core": "^0.0.6",
     "babel-loader": "^8.0.6",
     "core-js": "3.6.0",
     "fs-extra": "^9.0.0",

@@ -19,5 +19,12 @@
   "bugs": {
     "url": "https://github.com/TyrealGray/Canvest/issues"
   },
-  "homepage": "https://github.com/TyrealGray/Canvest#readme"
+  "homepage": "https://github.com/TyrealGray/Canvest#readme",
+  "dependencies": {
+    "ws": "^7.2.5"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
+  }
 }

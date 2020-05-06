@@ -13,7 +13,7 @@ function findInDir (dir, filter, fileList = []) {
 		} else if (filter.test(filePath)) {
 			let relativePath = filePath.replace(process.cwd(),'');
 
-			fileList.push(relativePath.replace(/\.canvest.(js|jsx|ts|tsx)$/,'.canvest'));
+			fileList.push(relativePath);
 		}
 	});
 
@@ -27,7 +27,7 @@ const createInitScript = () => {
 
 	let importTests = '';
 	canvestFiles.map((canvestFile) => {
-		importTests += `import '${path.join(process.cwd(),canvestFile)}';`;
+		importTests += `import '${path.join(process.cwd(),canvestFile.replace(/\.canvest.(js|jsx|ts|tsx)$/,'.canvest'))}';`;
 	});
 
 	const runContent = `${importTests}mocha.run();`;

@@ -23,3 +23,15 @@ window.snapshot = (canvasView) => {
 		});
 	}));
 };
+
+const socket = new WebSocket('ws://localhost:45670');
+
+// Connection opened
+socket.addEventListener('open',  (event) => {
+	socket.send('init canvest-client');
+});
+
+// Listen for messages
+socket.addEventListener('message', (event) => {
+	console.log('Message from server ', event.data);
+});

@@ -30,7 +30,8 @@ const createInitScript = () => {
 		importTests += `import '${path.join(process.cwd(),canvestFile.replace(/\.canvest.(js|jsx|ts|tsx)$/,'.canvest'))}';`;
 	});
 
-	const runContent = `${importTests}mocha.run();`;
+	const runContent = `${importTests}
+	initCanvest();`;
 
 	fs.writeFileSync(path.join(__dirname,'../script/run.js'), runContent);
 };

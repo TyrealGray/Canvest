@@ -34,6 +34,8 @@ async function processRunNPM(cmd, cwd){
 	return processRun(prefix,cmd,cwd);
 }
 
+exports.processRun = processRun;
+
 exports.processRunNPM = processRunNPM;
 
 exports.processRunNode = processRunNode;

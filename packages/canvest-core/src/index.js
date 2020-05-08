@@ -2,7 +2,7 @@ import pixelmatch from 'pixelmatch';
 
 const isPixelMatch = (dataA, dataB, width, height, rate) => {
 
-	const diff = pixelmatch(dataA, dataB, null, width, height, {threshold: 0.5});
+	const diff = pixelmatch(dataA, dataB, null, width, height);
 
 	const tolerateDiff = parseFloat(width * height) * rate;
 
@@ -25,19 +25,21 @@ const captureImage = (canvas, cloneCanvas) => {
 		}
 
 		const imageData = cloneCtx.getImageData(0, 0, canvas.width, canvas.height).data;
+		const dataURL = cloneCanvas.toDataURL('image/png');
 
 		const equal = (capture) => {
-			return isPixelMatch(imageData,capture.imageData, canvas.width, canvas.height, 0);
+			return isPixelMatch(imageData, capture.imageData, canvas.width, canvas.height, 0);
 		};
 
 		const match = (capture, rate) => {
-			return isPixelMatch(imageData,capture.imageData, canvas.width, canvas.height, rate);
+			return isPixelMatch(imageData, capture.imageData, canvas.width, canvas.height, rate);
 		};
 
 		return {
 			imageData,
+			dataURL,
 			match,
-			equal
+			equal,
 		};
 	} catch (e) {
 		throw e;
@@ -70,7 +72,7 @@ export const snapshot = (canvas) => {
 						&& captures[2].equal(capture)
 					) {
 
-						return resolve({...capture});
+						return resolve({ ...capture });
 					} else {
 						console.warn(`snapshot not stable redo capture`);
 						captures.shift();

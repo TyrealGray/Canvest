@@ -6,3 +6,4 @@ coverage
 packages/canvest-cli/bin
 packages/canvest-core/bin
 packages/canvest-cli/script/run.js
+autoShot

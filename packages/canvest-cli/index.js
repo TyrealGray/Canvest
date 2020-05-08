@@ -8,16 +8,24 @@ const createScirpt = require('./src/createScirpt');
 
 	createScirpt.createInitScript();
 
-	const cmd = ['./node_modules/webpack-dev-server/bin/webpack-dev-server.js'];
+	const cmd = ['--kill-others'];
 
-	cmd.push(...['--config',path.join(__dirname,'./canvest.config.js')]);
+	cmd.push(`\"node ./node_modules/@canvest/canvest-dev-server/index.js\"`);
 
-	if (!argv.debug) {
-		cmd.push('--quiet');
-	}
+	cmd.push(`\"node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config ${path.join(__dirname,'./canvest.config.js')} ${(!argv.debug)? '--quiet':''}\"`);
 
-	await processUtil.processRunNode(
-		cmd,
-		process.cwd(),
-	);
+	await processUtil.processRun('concurrently',cmd,process.cwd());
+
+	// const cmd = ['./node_modules/webpack-dev-server/bin/webpack-dev-server.js'];
+	//
+	// cmd.push(...['--config',path.join(__dirname,'./canvest.config.js')]);
+	//
+	// if (!argv.debug) {
+	// 	cmd.push('--quiet');
+	// }
+	//
+	// await processUtil.processRunNode(
+	// 	cmd,
+	// 	process.cwd(),
+	// );
 })();

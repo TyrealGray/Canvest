@@ -11,11 +11,11 @@
 <script type="text/javascript" src="./mocha/mocha.exec.js"></script>
 <script>
 	mocha.setup('bdd');
-	mocha.timeout(20000);
+	mocha.timeout(600000);
+	mocha.slow(3000);
 
 	var expect = chai.expect;
 	var assert = chai.assert;
-	var snapShot = null;
 </script>
 <script type="text/javascript" src="./bundle.js"></script>
 </body>

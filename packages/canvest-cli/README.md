@@ -92,7 +92,7 @@ If some test case failed, you will see diff comparison under bottom showing in h
 <img src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/showcase.png">
 
 ## API
-Canvest framework is using [`Mocha`](https://mochajs.org/) with [`Chai`](https://www.chaijs.com/) under the hood, every API Mocha had in browser, Canvest should have as well by accessing `mocha` variables but this is not recommended.
+Canvest framework is using [`Mocha`](https://mochajs.org/) with [`Chai`](https://www.chaijs.com/) under the hood, every API Mocha had in browser, Canvest should have as well by accessing `mocha` variable but this is not recommended.
 
 #### **snapshot(canvas): Promise\<snapshot Object>**
 take a snapshot of current canvas
@@ -110,7 +110,7 @@ take a snapshot of current canvas and cached in local, if local snapshot already
 - `name`: a unique name for snapshot to save under `./canvest/autoShot/(the-name-you-given).png`
 - `canvas`: HTML5 canvas dom element
 
-**as long as your local snapshot doesn't get removed, the comparison will always using local one.**
+**as long as your local snapshot doesn't get removed, `autoShot` will do the comparison instead of caching it and pass test.**
 
 ## Link
 Canvest example for pixi.js https://github.com/TyrealGray/canvest-pixi.js-example

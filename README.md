@@ -62,7 +62,7 @@ describe('Test my class', () => {
 		
 		myClass.updateRotation(0.0); // rotate sprite back to no rotation
 		
-		const secRotationSnapshot = await snapshot(app.view); // snapshot canvas again
+		const secRotationSnapshot = await snapshot(app.view); // take a snapshot for canvas again
 		
 		secRotationSnapshot.isEqual(noRotationSnapshot);// should also pass
 		
@@ -73,7 +73,7 @@ describe('Test my class', () => {
 ```
 Then using npm cmd
 ```
-$npm test
+$ npm test
 ```
 Canvest-cli will start two node servers, to config the port you could change npm script by
 ```javascript
@@ -85,7 +85,8 @@ Canvest-cli will start two node servers, to config the port you could change npm
 ```
 - `cachePort`: this is the port that canvest-cli using to start the node server to cache your snapshot, default is `45670`
 - `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `webapck-dev-server` under the hood
-### Result
+
+## Result
 If some test case failed, you will see diff comparison under bottom showing in highlight red color
 
 <img src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/showcase.png">
@@ -110,6 +111,9 @@ take a snapshot of current canvas and cached in local, if local snapshot already
 - `canvas`: HTML5 canvas dom element
 
 **as long as your local snapshot doesn't get removed, the comparison will always using local one.**
+
+## Link
+Canvest example for pixi.js https://github.com/TyrealGray/canvest-pixi.js-example
 
 ## License
 AFL-3.0

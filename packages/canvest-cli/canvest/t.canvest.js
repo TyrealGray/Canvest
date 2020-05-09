@@ -5,7 +5,6 @@ describe('js', function () {
 		canvas.width = 800;
 		canvas.height = 600;
 		const a = await snapshot(canvas);
-		await autoShot('test', canvas);
 		const context = canvas.getContext('2d');
 		context.fillStyle = '#ff0';
 		context.fillRect(0, 0, 800, 600);

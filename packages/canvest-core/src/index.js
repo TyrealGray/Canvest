@@ -2,7 +2,7 @@ import pixelmatch from 'pixelmatch';
 
 const isPixelMatch = (dataA, dataB, width, height, rate) => {
 
-	const diff = pixelmatch(dataA, dataB, null, width, height);
+	const diff = pixelmatch(dataA, dataB, null, width, height, { threshold: 0.05 });
 
 	const tolerateDiff = parseFloat(width * height) * rate;
 

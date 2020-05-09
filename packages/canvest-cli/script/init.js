@@ -35,10 +35,15 @@ const outputDiff = (a, b, w, h) => {
 
 	const diff = diffContext.createImageData(w, h);
 
-	pixelmatch(a.imageData, b.imageData, diff.data, w, h);
+	pixelmatch(a.imageData, b.imageData, diff.data, w, h, { threshold: 0.05 });
 	diffContext.putImageData(diff, 0, 0);
 
-	autoAddingDiffCanvas('failed test diff', diffCanvas.toDataURL('image/png'), w, h);
+	autoAddingDiffCanvas(
+		'failed test diff',
+		diffCanvas.toDataURL('image/png'),
+		w,
+		h,
+	);
 };
 
 window.initCanvest = (config) => {

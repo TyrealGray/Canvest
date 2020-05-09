@@ -73,7 +73,7 @@ describe('Test my class', () => {
 ```
 If some test case failed, you will see output under bottom showing the snapshot diff comparison 
 
-<p align="center"><img height="100px" width="100px" src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/showcase.png"></p>
+<img src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/showcase.png">
 
 ## API
 Canvest framework is using [`Mocha`](https://mochajs.org/) with [`Chai`](https://www.chaijs.com/) under the hood, every API Mocha had in browser, Canvest should had as well.

@@ -71,18 +71,33 @@ describe('Test my class', () => {
 	});
 });
 ```
-If some test case failed, you will see output under bottom showing the snapshot diff comparison 
+Then using npm cmd
+```
+$npm test
+```
+Canvest-cli will start two node servers, to config the port you could change npm script by
+```javascript
+ "scripts": {
+    ...
+    "test": "canvest --cachePort XXX --pagePort XXX",
+    ...
+  },
+```
+- `cachePort`: this is the port that canvest-cli using to start the node server to cache your snapshot, default is `45670`
+- `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `webapck-dev-server` under the hood
+### Result
+If some test case failed, you will see diff comparison under bottom showing in highlight red color
 
 <img src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/showcase.png">
 
 ## API
-Canvest framework is using [`Mocha`](https://mochajs.org/) with [`Chai`](https://www.chaijs.com/) under the hood, every API Mocha had in browser, Canvest should had as well.
+Canvest framework is using [`Mocha`](https://mochajs.org/) with [`Chai`](https://www.chaijs.com/) under the hood, every API Mocha had in browser, Canvest should have as well by accessing `mocha` variables but this is not recommended.
 
 #### **snapshot(canvas): Promise\<snapshot Object>**
 take a snapshot of current canvas
 
 - `canvas`: HTML5 canvas dom element
-- `snapshot Object`: return a canvest snapshot that has 4 APIs in below
+- `snapshot Object`: return a Canvest snapshot that has 4 APIs in below
     - `isEqual( otherSnapshot )`: snapshot should completely equal to `otherSnapshot`
     - `notEqual( otherSnapshot )`: snapshot should not equal to `otherSnapshot`
     - `isMatch( otherSnapshot, tolerance )`: snapshot could equal to `otherSnapshot` if test ignores number of tolerance pixels

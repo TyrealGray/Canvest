@@ -22,7 +22,7 @@ function findInDir (dir, filter, fileList = []) {
 
 
 
-const createInitScript = () => {
+const createInitScript = (cachePort) => {
 	const canvestFiles = findInDir(path.join(process.cwd(),'./canvest/'),/\.canvest.(js|jsx|ts|tsx)$/);
 
 	let importTests = '';
@@ -31,7 +31,7 @@ const createInitScript = () => {
 	});
 
 	const runContent = `${importTests}
-	initCanvest();`;
+	initCanvest({cachePort:${cachePort}});`;
 
 	fs.writeFileSync(path.join(__dirname,'../script/run.js'), runContent);
 };

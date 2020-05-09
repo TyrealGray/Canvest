@@ -47,7 +47,7 @@ const outputDiff = (a, b, w, h) => {
 };
 
 window.initCanvest = (config) => {
-	const socket = new WebSocket('ws://localhost:45670/');
+	const socket = new WebSocket(`ws://localhost:${config.cachePort}/`);
 
 	socket.addEventListener('open', () => {
 		canvestReady = true;
@@ -126,7 +126,7 @@ window.initCanvest = (config) => {
 	window.autoShot = async (name, canvasView) => {
 		const capture = await snapshot(canvasView);
 
-		const url = new URL('http://localhost:45670/shot');
+		const url = new URL(`http://localhost:${config.cachePort}/shot`);
 
 		const res = await fetch(url, {
 			method: 'POST',

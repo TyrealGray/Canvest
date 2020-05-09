@@ -1,5 +1,7 @@
+#!/usr/bin/env node
 const fs = require('fs-extra');
 const path = require('path');
+const argv = require('yargs').argv;
 const PNG = require('pngjs').PNG;
 const pixelmatch = require('pixelmatch');
 
@@ -85,7 +87,7 @@ fastify.route({
 	},
 });
 
-fastify.listen(45670, (err) => {
+fastify.listen(argv.port? argv.port: 45670, (err) => {
 	if (err) {
 		fastify.log.error(err);
 		process.exit(1);

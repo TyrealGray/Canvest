@@ -75,6 +75,7 @@ Then using npm cmd
 ```
 $ npm test
 ```
+Once you ran `npm test`, Canvest-cli will start running unit test that under `canvest` folder if files name is after `*.canvest.(js|ts)` pattern.
 Canvest-cli will start two node servers, to config the port you could change npm script by
 ```javascript
  "scripts": {

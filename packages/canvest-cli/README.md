@@ -1,9 +1,8 @@
 <p align="center"><img height="100px" width="100px" src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/canvest.png"></p>
 
-
 # Canvest
 
-Writing a unit test for your component that require render on HTML5 canvas without mocking any dom element
+Writing a unit test for your component that require render on HTML5 canvas without mocking any DOM element
 
 Using browser to render and execute your component's unit test logic directly, outputting image snapshot to compare in pixel-level
 
@@ -102,8 +101,8 @@ take a snapshot of current canvas
 - `snapshot Object`: return a Canvest snapshot that has 4 APIs in below
     - `isEqual( otherSnapshot )`: snapshot should completely equal to `otherSnapshot`
     - `notEqual( otherSnapshot )`: snapshot should not equal to `otherSnapshot`
-    - `isMatch( otherSnapshot, tolerance )`: snapshot could equal to `otherSnapshot` if test ignores number of tolerance pixels
-    - `notMatch( otherSnapshot, tolerance )`: snapshot could not equal to `otherSnapshot` even after test ignores number of tolerance pixels
+    - `isMatch( otherSnapshot, tolerance )`: snapshot could equal to `otherSnapshot` if test ignores number of tolerance percentage of pixels
+    - `notMatch( otherSnapshot, tolerance )`: snapshot could not equal to `otherSnapshot` even after test ignores number of tolerance percentage of pixels
 
 #### **autoShot(name, canvas): Promise\<void>**
 take a snapshot of current canvas and cached in local, if local snapshot already exists, compare current snapshot with local one automatically
@@ -112,6 +111,9 @@ take a snapshot of current canvas and cached in local, if local snapshot already
 - `canvas`: HTML5 canvas dom element
 
 **as long as your local snapshot doesn't get removed, `autoShot` will do the comparison instead of caching it and pass test.**
+
+## Typescript
+Currently Canvest is using `@babel/preset-typescript` to support `ts` file, it has some downside, check [here](https://babeljs.io/docs/en/babel-plugin-transform-typescript#caveats)
 
 ## Link
 Canvest example for pixi.js https://github.com/TyrealGray/canvest-pixi.js-example

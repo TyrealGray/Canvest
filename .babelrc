@@ -7,7 +7,6 @@
         "modules":"umd",
         "corejs": "3"
       }
-    ],
-    "@babel/preset-typescript"
+    ]
   ]
 }

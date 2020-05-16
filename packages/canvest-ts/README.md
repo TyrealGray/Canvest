@@ -12,7 +12,7 @@ Support Typescript and zero config needed in most cases for JavaScript project, 
 ## Install
 Run npm cmd to install on your project
 ```
-$ npm i @canvest/canvest-dev-server --save-dev
+$ npm i @canvest/canvest-ts --save-dev
 ```
 Check https://github.com/TyrealGray/Canvest for more information
 ## License

@@ -19,10 +19,11 @@
   ],
   "scripts": {
     "build": "exit 0",
-    "dev": "node index.js",
+    "dev": "node index.js --ts ./tsconfig.json",
     "lint": "exit 0",
     "prepublishOnly": "npm run build",
-    "test": "exit 0"
+    "test": "exit 0",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
@@ -40,19 +41,19 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
-    "@babel/core": "7.8.7",
-    "@babel/polyfill": "7.8.7",
-    "@babel/preset-env": "7.8.7",
-    "@babel/preset-typescript": "^7.9.0",
+    "@babel/core": "^7.8.7",
+    "@babel/polyfill": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
     "@canvest/canvest-core": "^1.0.1-alpha.0",
     "@canvest/canvest-dev-server": "^1.0.1-alpha.0",
     "babel-loader": "^8.0.6",
+    "chalk": "^4.0.0",
     "concurrently": "^5.2.0",
-    "core-js": "3.6.0",
+    "core-js": "^3.6.0",
     "fs-extra": "^9.0.0",
     "pixelmatch": "^5.2.0",
-    "webpack": "4.42.1",
-    "webpack-cli": "3.3.11",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "ws": "^7.2.5",
     "yargs": "^15.3.1"

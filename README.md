@@ -113,7 +113,7 @@ take a snapshot of current canvas and cached in local, if local snapshot already
 **as long as your local snapshot doesn't get removed, `autoShot` will do the comparison instead of caching it and pass test.**
 
 ## Typescript
-Currently Canvest is using `@babel/preset-typescript` to support `ts` file, it has some downside, check [here](https://babeljs.io/docs/en/babel-plugin-transform-typescript#caveats)
+To support Typescript, you will need run `npm i @canvest/canvest-ts --save-dev`
 
 ## Link
 Canvest example for pixi.js https://github.com/TyrealGray/canvest-pixi.js-example

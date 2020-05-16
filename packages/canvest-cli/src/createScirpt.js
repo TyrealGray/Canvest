@@ -22,12 +22,14 @@ function findInDir (dir, filter, fileList = []) {
 
 
 
-const createInitScript = (cachePort) => {
-	const canvestFiles = findInDir(path.join(process.cwd(),'./canvest/'),/\.canvest.(js|jsx|ts|tsx)$/);
+const createInitScript = (cachePort, isTS = null) => {
+	const processFiles = isTS? /\.canvest.(js|jsx|ts|tsx)$/ : /\.canvest.(js|jsx)$/;
+	const canvestFiles = findInDir(path.join(process.cwd(),'./canvest/'), processFiles);
 
 	let importTests = '';
 	canvestFiles.map((canvestFile) => {
-		importTests += `import '${path.join(process.cwd(),canvestFile.replace(/\.canvest.(js|jsx|ts|tsx)$/,'.canvest'))}';`;
+		const filePath = canvestFile.replace(processFiles,'.canvest');
+		importTests += `import '${path.join(process.cwd(),filePath)}';`;
 	});
 
 	const runContent = `${importTests}

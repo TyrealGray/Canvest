@@ -15,8 +15,8 @@
   },
   "scripts": {
     "build": "lerna exec -- npm run build",
-    "cli": "cd packages/canvest-cli && npm run dev",
-    "linkall": "lerna exec -- npm i && lerna link --force-local",
+    "iall": "lerna exec -- npm i",
+    "lall": "lerna link --force-local",
     "lint": "lerna exec -- npm run lint",
     "test": "lerna exec -- npm run test"
   },
@@ -39,9 +39,7 @@
     "@babel/core": "7.8.7",
     "@babel/polyfill": "7.8.7",
     "@babel/preset-env": "7.8.7",
-    "@babel/preset-typescript": "^7.9.0",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.0.6",
     "core-js": "3.6.0",
     "eslint": "5.16.0",
     "lerna": "^3.20.2",

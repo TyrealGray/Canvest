@@ -1,25 +1,98 @@
 const path = require('path');
 const fs = require('fs-extra');
+const chalk = require('chalk');
+const argv = require('yargs').argv;
 
-let defaultBabelOptions = {
-	presets: [
-		[
-			"@babel/preset-env",
-			{
-				useBuiltIns: "usage",
-				corejs: 3
-			},
-		],
-		"@babel/preset-typescript"
-	]
-};
+const isDev = !fs.existsSync(path.join(__dirname,'../../@canvest'));
+let canvestTSFolderPath = '';
 
-if (fs.existsSync(path.join(process.cwd(), '.babelrc'))) {
-	defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc')));
+
+if(isDev){
+	canvestTSFolderPath = path.join(__dirname,'../canvest-ts');
 }
 
-if(fs.existsSync(path.join(process.cwd(), '.babelrc.json'))) {
-	defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc.json')));
+let canvestTS = null;
+
+try {
+	let canvestTSPath = '';
+	if(isDev){
+		canvestTSPath = canvestTSFolderPath;
+	}
+	else {
+		canvestTSPath = '@canvest/canvest-ts';
+	}
+
+	if(argv.ts){
+		canvestTS = fs.existsSync(canvestTSPath);
+	}
+
+}catch (e) {
+	canvestTS = null;
+}
+
+const rules = [];
+const extensions = ['*', '.js', '.jsx'];
+const plugins = [];
+
+if(canvestTS){
+	console.log(chalk.yellow('loading ts-loader for Canvest'));
+
+	extensions.push('.tsx', '.ts');
+	let tsLoaderRule = {
+		test: /\.tsx?$/,
+		use: [
+			{
+				loader: `${isDev? path.join(canvestTSFolderPath,'/node_modules/'):''}ts-loader`,
+				options: {
+					transpileOnly: true
+				}
+			}
+		]
+	};
+
+	rules.push(tsLoaderRule);
+
+	let tsPluginPath = '';
+	if(isDev){
+		tsPluginPath = path.join(canvestTSFolderPath, 'node_modules/tsconfig-paths-webpack-plugin');
+	}else {
+		tsPluginPath = 'tsconfig-paths-webpack-plugin';
+	}
+
+	const TsconfigPathsPlugin = require(tsPluginPath);
+
+	plugins.push(new TsconfigPathsPlugin({ configFile: path.join(process.cwd(),argv.ts) }))
+
+} else {
+	console.log(chalk.yellow('loading @babel/preset-env for Canvest'));
+	let defaultBabelOptions = {
+		presets: [
+			[
+				"@babel/preset-env",
+				{
+					useBuiltIns: "usage",
+					corejs: 3
+				},
+			]
+		]
+	};
+
+	if (fs.existsSync(path.join(process.cwd(), '.babelrc'))) {
+		defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc')));
+	}
+
+	if(fs.existsSync(path.join(process.cwd(), '.babelrc.json'))) {
+		defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc.json')));
+	}
+
+	const babelLoaderRule = {
+		test: /\.(js|jsx)$/,
+		exclude: /(node_modules|canvest-dev-server\/client)/,
+		loader: 'babel-loader',
+		options: defaultBabelOptions,
+	};
+
+	rules.push(babelLoaderRule);
 }
 
 const contentBase = [__dirname];
@@ -41,16 +114,10 @@ module.exports = {
 		open: true
 	},
 	module: {
-		rules: [
-			{
-				test: /\.(js|jsx|tsx|ts)$/,
-				exclude: /(node_modules|canvest-dev-server\/client)/,
-				loader: 'babel-loader',
-				options: defaultBabelOptions,
-			}
-		],
+		rules
 	},
 	resolve: {
-		extensions: ['*', '.js', '.jsx', '.tsx', '.ts'],
+		extensions,
+		plugins
 	},
 };

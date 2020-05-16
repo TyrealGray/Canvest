@@ -19,7 +19,7 @@ try {
 		canvestTSPath = canvestTSFolderPath;
 	}
 	else {
-		canvestTSPath = '@canvest/canvest-ts';
+		canvestTSPath = path.join(process.cwd(),'node_modules','@canvest/canvest-ts');
 	}
 
 	if(argv.ts){

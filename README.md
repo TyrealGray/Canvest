@@ -115,8 +115,10 @@ take a snapshot of current canvas and cached in local, if local snapshot already
 ## Typescript
 To support Typescript, you will need run `npm i @canvest/canvest-ts --save-dev`
 
+Change your canvest test script into `canvest --ts ./path-to-your-tsconfig.json`
+
 ## Link
-Canvest example for pixi.js https://github.com/TyrealGray/canvest-pixi.js-example
+Canvest example for pixi.js with typescript https://github.com/TyrealGray/canvest-pixi.js-example
 
 ## License
 AFL-3.0

@@ -1,6 +1,6 @@
 {
   "name": "@canvest/canvest-ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publishConfig": {
     "access": "public"
   },

@@ -27,7 +27,7 @@ const autoAddingDiffCanvas = (title, dataURL, w, h) => {
 	img.src = dataURL;
 };
 
-const outputDiff = (a, b, w, h) => {
+const outputDiff = (a, b, w, h, socket) => {
 	const diffCanvas = document.createElement('canvas');
 	diffCanvas.width = w;
 	diffCanvas.height = h;
@@ -44,13 +44,41 @@ const outputDiff = (a, b, w, h) => {
 		w,
 		h,
 	);
+
+	if (!socketInitFailed) {
+		socket.send(
+			JSON.stringify({
+				type: 'diff', data: diffCanvas.toDataURL('image/png'),
+			}),
+		);
+	}
 };
 
 window.initCanvest = (config) => {
 	const socket = new WebSocket(`ws://localhost:${config.cachePort}/`);
 
 	socket.addEventListener('open', () => {
+		window.socket = socket;
 		canvestReady = true;
+
+		before(() => {
+			socket.send(
+				JSON.stringify({ type: 'event', data: 'suiteRun' }),
+			);
+		});
+
+		after(() => {
+			socket.send(
+				JSON.stringify({
+					type: 'event',
+					data: 'suiteFinished',
+				}),
+			);
+		});
+
+		socket.send(
+			JSON.stringify({ type: 'event', data: 'testInit' }),
+		);
 	});
 
 	socket.addEventListener('message', (event) => {
@@ -73,6 +101,7 @@ window.initCanvest = (config) => {
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
+					socket,
 				);
 			}
 
@@ -87,6 +116,7 @@ window.initCanvest = (config) => {
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
+					socket,
 				);
 			}
 
@@ -101,6 +131,7 @@ window.initCanvest = (config) => {
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
+					socket,
 				);
 			}
 			assert(result, `snapshot is not match, expect to be match`);
@@ -115,6 +146,7 @@ window.initCanvest = (config) => {
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
+					socket,
 				);
 			}
 			assert(!result, `snapshot is match, expect to be not match`);
@@ -141,6 +173,13 @@ window.initCanvest = (config) => {
 		const resJson = await res.json();
 
 		if (!resJson.pass) {
+
+			if (!socketInitFailed) {
+				socket.send(
+					JSON.stringify({ type: 'info', data: 'testFailed' }),
+				);
+			}
+
 			if (resJson.dataURL) {
 				autoAddingDiffCanvas(
 					`(${name}) cached diff`,
@@ -164,23 +203,6 @@ window.initCanvest = (config) => {
 
 	window.runMocha = () => {
 		if (canvestReady) {
-			if (!socketInitFailed) {
-				beforeEach(() => {
-					socket.send(
-						JSON.stringify({ type: 'event', name: 'suiteRun' }),
-					);
-				});
-
-				afterEach(() => {
-					socket.send(
-						JSON.stringify({
-							type: 'event',
-							name: 'suiteFinished',
-						}),
-					);
-				});
-			}
-
 			mocha.run();
 		} else {
 			setTimeout(() => {

@@ -12,9 +12,12 @@ const createScirpt = require('./src/createScirpt');
 
 	const cmd = ['--kill-others'];
 
-	cmd.push(`\"node ./node_modules/@canvest/canvest-dev-server/index.js --port ${cachePort}\"`);
+	const cdsConfigCMD = `--port ${cachePort} ${(argv.ci) ? `--ci ${argv.ci}`:''}`;
+
+	cmd.push(`\"node ./node_modules/@canvest/canvest-dev-server/index.js ${cdsConfigCMD}\"`);
 
 	const wdsRunCMD = `node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config ${path.join(__dirname,'./canvest.config.js')}`;
+
 	const wdsConfigCMD = `${(!argv.debug) ? '--quiet' : ''} ${(argv.pagePort) ? `--port ${argv.pagePort}`: ''} ${(argv.ts) ? `--ts ${argv.ts}` : ''}`;
 
 	cmd.push(`\" ${wdsRunCMD} ${wdsConfigCMD} \"`);

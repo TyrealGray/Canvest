@@ -7,7 +7,7 @@ Writing a unit test for your HTML5 Canvas component without mocking any DOM elem
 
 Using browser to render and execute your component's unit test logic directly, outputting image snapshot to compare in pixel-level
 
-Support Typescript and zero config needed in most cases for JavaScript project, using API like `it` and `describe` with a few unique API for canvas snapshot
+Support TypeScript and zero config needed in most cases for JavaScript project, using API like `it` and `describe` with a few unique API for canvas snapshot
 
 ## Install
 Run npm cmd to install on your project

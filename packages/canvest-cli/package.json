@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build": "exit 0",
-    "dev": "node index.js --ts ./tsconfig.json",
+    "dev": "node index.js --ts ./tsconfig.json --ci ./canvest",
     "lint": "exit 0",
     "prepublishOnly": "npm run build",
     "test": "exit 0",

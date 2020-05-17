@@ -5,32 +5,100 @@ const argv = require('yargs').argv;
 const PNG = require('pngjs').PNG;
 const pixelmatch = require('pixelmatch');
 
-const fastify = require('fastify')({ bodyLimit: 1024 * 1024 * 50 });
+const fastify = require('fastify')();
 
-const wsHandle = (conn) => {
-	conn.socket.on('message', (message) => {
-		if (typeof message === 'string') {
-			//console.log(JSON.parse(message));
-		}
-	});
-};
+let ciOutputPath = '';
+
+if (argv.ci) {
+	ciOutputPath = path.join(process.cwd(), argv.ci, 'canvest-test-result');
+	fs.ensureDirSync(ciOutputPath);
+}
 
 fastify.register(require('fastify-cors'), { origin: true });
 
-fastify.register(require('fastify-websocket'), {
-	handle: wsHandle,
-	options: {
-		maxPayload: 1024 * 1024 * 50, // we set the maximum allowed messages size to 1 MiB (1024 bytes * 1024 bytes)
-		path: '/', // we accept only connections matching this path e.g.: ws://localhost:3000/fastify
-	},
+fastify.register(require('fastify-ws'));
+
+fastify.ready((err) => {
+	if (err) throw err;
+
+	console.log('｢cds｣ starting');
+
+	fastify.ws.on('connection', (socket) => {
+		if (!argv.ci) {
+			return;
+		}
+
+		let unfinishedTest = 0;
+		let testCloseTimer = null;
+		let testFailed = 0;
+
+		socket.on('message', (message) => {
+			if (typeof message === 'string') {
+				const testInfo = JSON.parse(message);
+
+				if (testInfo.type === 'diff') {
+					testFailed++;
+					const dataURL = testInfo.data.replace(
+						/^data:image\/png;base64,/,
+						'',
+					);
+					const outputImagePath = path.join(
+						ciOutputPath,
+						`test-${testFailed}.diff.png`,
+					);
+					fs.writeFile(outputImagePath, dataURL, 'base64');
+				}
+
+				if (
+					testInfo.type === 'info' &&
+					testInfo.data === 'testFailed'
+				) {
+					testFailed++;
+				}
+
+				if (testInfo.type === 'event' && testInfo.data === 'testInit') {
+					unfinishedTest = 1;
+					clearTimeout(testCloseTimer);
+					testCloseTimer = null;
+				}
+
+				if (
+					testInfo.type === 'event' &&
+					testInfo.data === 'suiteFinished'
+				) {
+					unfinishedTest = 0;
+					clearTimeout(testCloseTimer);
+
+					testCloseTimer = setTimeout(() => {
+						if (!unfinishedTest && !testFailed) {
+							process.exit(0);
+						} else {
+							console.error(
+								`${testFailed} test${
+									testFailed > 1 ? 's' : ''
+								} failed, diff results output at ${argv.ci}`,
+							);
+							process.exit(1);
+						}
+					}, 5000);
+				}
+
+				if (testInfo.type === 'event' && testInfo.data === 'suiteRun') {
+					unfinishedTest = 1;
+				}
+			}
+		});
+
+		socket.on('close', () => console.log('Client disconnected.'));
+	});
 });
 
 fastify.route({
 	method: 'POST',
 	url: '/shot',
 	handler: async (req, reply) => {
+		const fileName = req.body.name;
 		try {
-			const fileName = req.body.name;
 			const imageDataURL = req.body.dataURL;
 			const imageDataBase64 = imageDataURL.replace(
 				/^data:image\/png;base64,/,
@@ -77,21 +145,29 @@ fastify.route({
 				? cachedImageBuffer.toString('base64')
 				: null;
 
+			if (!pass && argv.ci) {
+				const outputImagePath = path.join(
+					ciOutputPath,
+					`${fileName}.diff.png`,
+				);
+				fs.writeFileSync(outputImagePath, dataURL, 'base64');
+			}
+
 			reply.type('application/json').code(200);
 			return { pass, dataURL };
 		} catch (e) {
 			console.log(e);
 			reply.type('application/json').code(500);
+
+			if (argv.ci) {
+				fs.ensureFileSync(
+					path.join(ciOutputPath, `${fileName}.diff.failed`),
+				);
+			}
+
 			return { pass: false, dataURL: null };
 		}
 	},
 });
 
-fastify.listen(argv.port? argv.port: 45670, (err) => {
-	if (err) {
-		fastify.log.error(err);
-		process.exit(1);
-	}
-
-	console.log('｢cds｣ starting');
-});
+fastify.listen(argv.port ? argv.port : 45670);

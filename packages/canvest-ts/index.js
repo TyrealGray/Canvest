@@ -1,1 +1,1 @@
-export default { canvestTS: true };
+exports.canvestTS = true;

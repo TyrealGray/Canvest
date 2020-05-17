@@ -6,7 +6,7 @@ Writing a unit test for your HTML5 Canvas component without mocking any DOM elem
 
 Using browser to render and execute your component's unit test logic directly, outputting image snapshot to compare in pixel-level
 
-Support Typescript and zero config needed in most cases for JavaScript project, using API like `it` and `describe` with a few unique API for canvas snapshot
+Support TypeScript and zero config needed in most cases for JavaScript project, using API like `it` and `describe` with a few unique API for canvas snapshot
 
 ## Install
 Run npm cmd to install on your project
@@ -122,13 +122,20 @@ take a snapshot of current canvas
     - `isMatch( otherSnapshot, tolerance )`: snapshot could equal to `otherSnapshot` if test ignores number of tolerance percentage of pixels
     - `notMatch( otherSnapshot, tolerance )`: snapshot could not equal to `otherSnapshot` even after test ignores number of tolerance percentage of pixels
     
-## Typescript
-To support Typescript, you will need run `npm i @canvest/canvest-ts --save-dev`
+## TypeScript
+To support TypeScript, you will need run `npm i @canvest/canvest-ts --save-dev` to install `canvest-ts` plugin
 
-Change your canvest test script into `canvest --ts ./path-to-your-tsconfig.json`
+Then using `canvest --ts ./path-to-your-tsconfig.json` to start testing
+
+## Usage with CI
+If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done
+
+For example, `canvest --ci ./canvest` will create a `canvest-test-result` folder under `./canvest` folder, any failed test will create a diff image in result folder
+
+If diff is a cached snapshot and it is not valid because new snapshot size is different, it will still create an empty file `failed-Name.diff.failed`
 
 ## Link
-Canvest example for pixi.js with typescript https://github.com/TyrealGray/canvest-pixi.js-example
+Canvest example for pixi.js with TypeScript https://github.com/TyrealGray/canvest-pixi.js-example
 
 ## License
 AFL-3.0

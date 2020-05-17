@@ -23,7 +23,6 @@
   "dependencies": {
     "fastify": "^2.14.0",
     "fastify-cors": "^3.0.3",
-    "fastify-websocket": "^1.1.2",
     "fastify-ws": "^1.0.3",
     "fs-extra": "^9.0.0",
     "pixelmatch": "^5.2.0",

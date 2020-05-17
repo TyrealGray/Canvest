@@ -63,7 +63,7 @@ describe('Test my class', () => {
 		
 		const rotation15Snapshot = await snapshot(app.view); // 1.5 rotation snapshot
 		
-		myClass.updateRotation(1.6); // rotate sprite back to zero rotation
+		myClass.updateRotation(1.6); // rotate sprite to 1.6 rotation
 		
 		const rotation16Snapshot = await snapshot(app.view);
 		

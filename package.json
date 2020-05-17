@@ -18,6 +18,7 @@
     "iall": "lerna exec -- npm i",
     "lall": "lerna link --force-local",
     "lint": "lerna exec -- npm run lint",
+    "log": "auto-changelog",
     "test": "lerna exec -- npm run test"
   },
   "repository": {

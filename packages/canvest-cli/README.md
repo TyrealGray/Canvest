@@ -2,7 +2,7 @@
 
 # Canvest
 
-Writing a unit test for your component that require render on HTML5 canvas without mocking any DOM element
+Writing a unit test for your HTML5 Canvas component without mocking any DOM element
 
 Using browser to render and execute your component's unit test logic directly, outputting image snapshot to compare in pixel-level
 
@@ -45,27 +45,35 @@ describe('Test my class', () => {
 
 		const app = new PIXI.Application({
 			width: XXX, height: YYY,
-			preserveDrawingBuffer: true //<--- important
+			preserveDrawingBuffer: true //<--- important for Canvest to take snapshot, false might lead to a blank image
 		});
 		
 		const myClass = new MyClass();
 		app.stage.addChild(myClass._sprite);
 		
-		const noRotationSnapshot = await snapshot(app.view); // take a snapshot of current canvas with sprite without rotation
-		
 		myClass.updateRotation(1.5);
 		
-		const rotatedSnapshot = await snapshot(app.view); // new snapshot for current canvas with sprite rotate at 1.5
+		/** 
+		 * the second time this autoShot function run,
+		 * it will check the current Canvas's image with the local cached 'rotation_that_expected.png' file,
+		 * if this one is not the same with the cached image,
+		 * the test will fail
+		 **/
+		await autoShot('rotation_that_expected', app.view);
 		
-		noRotationSnapshot.notEqual(rotatedSnapshot);// should pass
+		const rotation15Snapshot = await snapshot(app.view); // 1.5 rotation snapshot
 		
-		myClass.updateRotation(0.0); // rotate sprite back to no rotation
+		myClass.updateRotation(1.6); // rotate sprite to 1.6 rotation
 		
-		const secRotationSnapshot = await snapshot(app.view); // take a snapshot for canvas again
+		const rotation16Snapshot = await snapshot(app.view);
 		
-		secRotationSnapshot.isEqual(noRotationSnapshot);// should also pass
+		rotation16Snapshot.notEqual(rotation15Snapshot); // should pass
 		
-		secRotationSnapshot.isEqual(rotatedSnapshot); // should fail
+		/**
+		 * if the number of different pixels between rotation16Snapshot and rotation15Snapshot is below 20%,
+		 * isMatch function will make the test as passed
+		 **/
+		rotation16Snapshot.isMatch(rotation15Snapshot, 0.2);
 		
 	});
 });
@@ -87,14 +95,24 @@ Canvest-cli will start two node servers, to config the port you could change npm
 - `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `webapck-dev-server` under the hood
 
 ## Result
-If some test case failed, you will see diff comparison under bottom showing in highlight red color
+If some test case failed, you will see diff comparison under bottom showing in highlight red color.
+
+**One thing should notice is the diff for cached snapshot won't show up if cached snapshot has different size with current one.**
 
 <img src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/showcase.png">
 
 ## API
 Canvest framework is using [`Mocha`](https://mochajs.org/) with [`Chai`](https://www.chaijs.com/) under the hood, every API Mocha had in browser, Canvest should have as well by accessing `mocha` variable but this is not recommended.
 
-#### **snapshot(canvas): Promise\<snapshot Object>**
+### **autoShot(name, canvas): Promise\<void>**
+take a snapshot of current canvas and cached in local, if local snapshot already exists, compare current snapshot with local one automatically
+
+- `name`: a unique name for snapshot to save under `./canvest/autoShot/(the-name-you-given).png`
+- `canvas`: HTML5 canvas dom element
+
+- **as long as your local snapshot doesn't get removed, `autoShot` will do the comparison instead of caching it and pass test**
+
+### **snapshot(canvas): Promise\<snapshot Object>**
 take a snapshot of current canvas
 
 - `canvas`: HTML5 canvas dom element
@@ -103,15 +121,7 @@ take a snapshot of current canvas
     - `notEqual( otherSnapshot )`: snapshot should not equal to `otherSnapshot`
     - `isMatch( otherSnapshot, tolerance )`: snapshot could equal to `otherSnapshot` if test ignores number of tolerance percentage of pixels
     - `notMatch( otherSnapshot, tolerance )`: snapshot could not equal to `otherSnapshot` even after test ignores number of tolerance percentage of pixels
-
-#### **autoShot(name, canvas): Promise\<void>**
-take a snapshot of current canvas and cached in local, if local snapshot already exists, compare current snapshot with local one automatically
-
-- `name`: a unique name for snapshot to save under `./canvest/autoShot/(the-name-you-given).png`
-- `canvas`: HTML5 canvas dom element
-
-**as long as your local snapshot doesn't get removed, `autoShot` will do the comparison instead of caching it and pass test.**
-
+    
 ## Typescript
 To support Typescript, you will need run `npm i @canvest/canvest-ts --save-dev`
 

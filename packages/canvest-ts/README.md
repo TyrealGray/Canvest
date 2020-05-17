@@ -3,7 +3,7 @@
 
 # Canvest
 
-Writing a unit test for your component that require render on HTML5 canvas without mocking any DOM element
+Writing a unit test for your HTML5 Canvas component without mocking any DOM element
 
 Using browser to render and execute your component's unit test logic directly, outputting image snapshot to compare in pixel-level
 

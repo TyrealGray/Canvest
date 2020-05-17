@@ -71,8 +71,7 @@ describe('Test my class', () => {
 		
 		/**
 		 * if the number of different pixels between rotation16Snapshot and rotation15Snapshot is below 20%,
-		 * isMatch function will make the test as passed,
-		 * as long as the snapshot width and height are the same
+		 * isMatch function will make the test as passed
 		 **/
 		rotation16Snapshot.isMatch(rotation15Snapshot, 0.2);
 		
@@ -96,7 +95,9 @@ Canvest-cli will start two node servers, to config the port you could change npm
 - `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `webapck-dev-server` under the hood
 
 ## Result
-If some test case failed, you will see diff comparison under bottom showing in highlight red color
+If some test case failed, you will see diff comparison under bottom showing in highlight red color.
+
+**One thing should notice is the diff for cached snapshot won't show up if cached snapshot has different size with current one.**
 
 <img src="https://raw.githubusercontent.com/TyrealGray/Canvest/master/showcase.png">
 

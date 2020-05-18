@@ -91,8 +91,8 @@ Canvest-cli will start two node servers, to config the port you could change npm
     ...
   },
 ```
-- `cachePort`: this is the port that canvest-cli using to start the node server to cache your snapshot, default is `45670`
-- `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `webapck-dev-server` under the hood
+- `cachePort`: this is the port that canvest-cli using to start the node server to cache your snapshot, default is `45670`.
+- `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `webapck-dev-server` under the hood.
 
 ## Result
 If some test case failed, you will see diff comparison under bottom showing in highlight red color.
@@ -103,6 +103,8 @@ If some test case failed, you will see diff comparison under bottom showing in h
 
 ## API
 Canvest framework is using [`Mocha`](https://mochajs.org/) with [`Chai`](https://www.chaijs.com/) under the hood, every API Mocha had in browser, Canvest should have as well by accessing `mocha` variable but this is not recommended.
+
+You could create file `canvest.init.js`(or `canvest.init.ts` when using `--ts`) under `./canvest` folder and doing all the setup in there.
 
 ### **autoShot(name, canvas): Promise\<void>**
 take a snapshot of current canvas and cached in local, if local snapshot already exists, compare current snapshot with local one automatically
@@ -121,18 +123,23 @@ take a snapshot of current canvas
     - `notEqual( otherSnapshot )`: snapshot should not equal to `otherSnapshot`
     - `isMatch( otherSnapshot, tolerance )`: snapshot could equal to `otherSnapshot` if test ignores number of tolerance percentage of pixels
     - `notMatch( otherSnapshot, tolerance )`: snapshot could not equal to `otherSnapshot` even after test ignores number of tolerance percentage of pixels
-    
+
+### **setThreshold(number): void**
+set global threshold for snapshot comparision, if you just want one snapshot comparision to be more tolerant, use `isMatch` or `notMatch` function with `tolerance` parameter
+
+- `number` threshold, a number that can be set to maximum `1.0`. Default is `0.05`, higher number will ignore more differences between snapshot comparision
+
 ## TypeScript
 To support TypeScript, you will need run `npm i @canvest/canvest-ts --save-dev` to install `canvest-ts` plugin
 
 Then using `canvest --ts ./path-to-your-tsconfig.json` to start testing
 
 ## Integrate with CI
-If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done, and add a div with className `test_end` or `test_end_with_failed`
+If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done, and add a div with className `test_end` or `test_end_with_failed`.
 
-For example, `canvest --ci ./canvest` will create a `canvest-test-result` folder under `./canvest` folder, any failed test will create a diff image in result folder
+For example, `canvest --ci ./canvest` will create a `canvest-test-result` folder under `./canvest` folder, any failed test will create a diff image in result folder.
 
-If diff is a cached snapshot and it is not valid because new snapshot size is different, it will still create an empty file `failed-Name.diff.failed`
+If diff is a cached snapshot and it is not valid because new snapshot size is different, it will still create an empty file `failed-Name.diff.failed`.
 
 ## Link
 Canvest example for pixi.js with TypeScript https://github.com/TyrealGray/canvest-pixi.js-example

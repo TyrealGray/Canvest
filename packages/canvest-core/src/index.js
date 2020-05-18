@@ -1,8 +1,8 @@
 import pixelmatch from 'pixelmatch';
 
-const isPixelMatch = (dataA, dataB, width, height, rate) => {
+const isPixelMatch = (dataA, dataB, width, height, rate, threshold) => {
 
-	const diff = pixelmatch(dataA, dataB, null, width, height, { threshold: 0.05 });
+	const diff = pixelmatch(dataA, dataB, null, width, height, { threshold });
 
 	const tolerateDiff = parseFloat(width * height) * rate;
 
@@ -27,12 +27,12 @@ const captureImage = (canvas, cloneCanvas) => {
 		const imageData = cloneCtx.getImageData(0, 0, canvas.width, canvas.height).data;
 		const dataURL = cloneCanvas.toDataURL('image/png');
 
-		const equal = (capture) => {
-			return isPixelMatch(imageData, capture.imageData, canvas.width, canvas.height, 0);
+		const equal = (capture, threshold) => {
+			return isPixelMatch(imageData, capture.imageData, canvas.width, canvas.height, 0, threshold);
 		};
 
-		const match = (capture, rate) => {
-			return isPixelMatch(imageData, capture.imageData, canvas.width, canvas.height, rate);
+		const match = (capture, rate, threshold) => {
+			return isPixelMatch(imageData, capture.imageData, canvas.width, canvas.height, rate, threshold);
 		};
 
 		return {

@@ -151,7 +151,7 @@ fastify.route({
 					diffImage.data,
 					width,
 					height,
-					{ threshold: 0.05 },
+					{ threshold: req.body.threshold },
 				);
 
 				cachedImageBuffer = PNG.sync.write(diffImage);

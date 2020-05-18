@@ -2,7 +2,8 @@ import { snapshot } from '@canvest/canvest-core';
 import pixelmatch from 'pixelmatch';
 
 let canvestReady = false,
-	socketInitFailed = false;
+	socketInitFailed = false,
+	threshold = 0.05;
 
 const autoAddingDiffCanvas = (title, dataURL, w, h) => {
 	const canvas = document.createElement('canvas');
@@ -54,6 +55,10 @@ const outputDiff = (a, b, w, h, socket) => {
 	}
 };
 
+window.setThreshold = (number) => {
+	threshold = number;
+};
+
 window.initCanvest = (config) => {
 	const socket = new WebSocket(`ws://localhost:${config.cachePort}/`);
 
@@ -103,9 +108,9 @@ window.initCanvest = (config) => {
 	});
 
 	window.snapshot = async (canvasView) => {
-		const capture = await snapshot(canvasView);
+		const capture = await snapshot(canvasView, threshold);
 		capture.isEqual = (otherCapture) => {
-			const result = capture.equal(otherCapture);
+			const result = capture.equal(otherCapture, threshold);
 			if (!result) {
 				outputDiff(
 					capture,
@@ -120,7 +125,7 @@ window.initCanvest = (config) => {
 		};
 
 		capture.notEqual = (otherCapture) => {
-			const result = capture.equal(otherCapture);
+			const result = capture.equal(otherCapture, threshold);
 			if (result) {
 				outputDiff(
 					capture,
@@ -135,7 +140,7 @@ window.initCanvest = (config) => {
 		};
 
 		capture.isMatch = (otherCapture, rate) => {
-			const result = capture.match(otherCapture, rate);
+			const result = capture.match(otherCapture, rate, threshold);
 			if (!result) {
 				outputDiff(
 					capture,
@@ -149,7 +154,7 @@ window.initCanvest = (config) => {
 		};
 
 		capture.notMatch = (otherCapture, rate) => {
-			const result = capture.match(otherCapture, rate);
+			const result = capture.match(otherCapture, rate, threshold);
 
 			if (result) {
 				outputDiff(
@@ -178,6 +183,7 @@ window.initCanvest = (config) => {
 			},
 			body: JSON.stringify({
 				name,
+				threshold,
 				dataURL: capture.dataURL,
 			}),
 		});

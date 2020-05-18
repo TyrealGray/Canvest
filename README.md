@@ -127,8 +127,8 @@ To support TypeScript, you will need run `npm i @canvest/canvest-ts --save-dev` 
 
 Then using `canvest --ts ./path-to-your-tsconfig.json` to start testing
 
-## Usage with CI
-If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done
+## Integrate with CI
+If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done, and add a div with className `test_end` or `test_end_with_failed`
 
 For example, `canvest --ci ./canvest` will create a `canvest-test-result` folder under `./canvest` folder, any failed test will create a diff image in result folder
 

@@ -83,6 +83,17 @@ window.initCanvest = (config) => {
 
 	socket.addEventListener('message', (event) => {
 		console.log('Message from CDS', event.data);
+		let endDiv = null;
+		switch (event.data) {
+			case 'test_end':
+			case 'test_end_with_failed':
+				endDiv = document.createElement('div');
+				endDiv.className = event.data;
+				document.body.appendChild(endDiv);
+				break;
+			default:
+				break;
+		}
 	});
 
 	socket.addEventListener('error', (error) => {

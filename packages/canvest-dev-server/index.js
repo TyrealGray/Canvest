@@ -19,7 +19,9 @@ fastify.register(require('fastify-cors'), { origin: true });
 fastify.register(require('fastify-ws'));
 
 fastify.ready((err) => {
-	if (err) throw err;
+	if (err) {
+		throw err;
+	}
 
 	console.log('｢cds｣ starting');
 
@@ -31,6 +33,7 @@ fastify.ready((err) => {
 		let unfinishedTest = 0;
 		let testCloseTimer = null;
 		let testFailed = 0;
+		let testStart = false;
 
 		socket.on('message', (message) => {
 			if (typeof message === 'string') {
@@ -60,6 +63,17 @@ fastify.ready((err) => {
 					unfinishedTest = 1;
 					clearTimeout(testCloseTimer);
 					testCloseTimer = null;
+
+					setTimeout(()=>{
+						if(testStart) {
+							return;
+						}
+
+						socket.send('test_end');
+						console.error('No test is running, at least create one test case to run.');
+
+						process.exit(0);
+					}, 5000);
 				}
 
 				if (
@@ -70,13 +84,16 @@ fastify.ready((err) => {
 					clearTimeout(testCloseTimer);
 
 					testCloseTimer = setTimeout(() => {
+
 						if (!unfinishedTest && !testFailed) {
+							socket.send('test_end');
 							process.exit(0);
-						} else {
+						} else if(!unfinishedTest) {
+							socket.send('test_end_with_failed');
 							console.error(
 								`${testFailed} test${
 									testFailed > 1 ? 's' : ''
-								} failed, diff results output at ${argv.ci}`,
+									} failed, diff results output at ${argv.ci}`,
 							);
 							process.exit(1);
 						}
@@ -85,6 +102,7 @@ fastify.ready((err) => {
 
 				if (testInfo.type === 'event' && testInfo.data === 'suiteRun') {
 					unfinishedTest = 1;
+					testStart = true;
 				}
 			}
 		});

@@ -1,7 +1,6 @@
 {
-  "output": "CHANGELOG.md",
   "template": "keepachangelog",
   "tagPattern": "@canvest/canvest-",
-  "ignoreCommitPattern": "^Publish$|^Update README.md$",
+  "ignoreCommitPattern": "^Publish$|^Update README.md$|^update CHANGELOG.md$",
   "commitLimit": false
 }

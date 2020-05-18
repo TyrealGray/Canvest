@@ -2,12 +2,15 @@
   "packages": [
     "packages/*"
   ],
-  "ignoreChanges": ["**/*.canvest.(js|ts)", "**/*.md"],
+  "ignoreChanges": [
+    "**/*.canvest.(js|ts)",
+    "**/*.md"
+  ],
   "command": {
     "version": {
       "allowBranch": "master",
       "exact": true
     }
   },
-  "version": "1.0.4-alpha.0"
+  "version": "1.1.0"
 }

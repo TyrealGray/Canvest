@@ -14,7 +14,8 @@
     "parser": "flow"
   },
   "scripts": {
-    "build": "lerna exec -- npm run build",
+    "release": "npm run build && lerna version --no-push",
+    "build": "node ./script/prebuild.js && lerna exec -- npm run build",
     "iall": "lerna exec -- npm i",
     "lall": "lerna link --force-local",
     "lint": "lerna exec -- npm run lint",

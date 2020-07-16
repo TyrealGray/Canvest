@@ -135,7 +135,7 @@ To support TypeScript, you will need run `npm i @canvest/canvest-ts --save-dev` 
 Then using `canvest --ts ./path-to-your-tsconfig.json` to start testing
 
 ## Integrate with CI
-If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done, and add a div with className `test_end` or `test_end_with_failed`.
+If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done, and add a div in web page with className `test_end` or `test_end_with_failed`.
 
 For example, `canvest --ci ./canvest` will create a `canvest-test-result` folder under `./canvest` folder, any failed test will create a diff image in result folder.
 
@@ -143,6 +143,8 @@ If diff is a cached snapshot and it is not valid because new snapshot size is di
 
 ## Link
 Canvest example for pixi.js with TypeScript https://github.com/TyrealGray/canvest-pixi.js-example
+
+Canvest example for three.js https://github.com/TyrealGray/canvest-three.js-example
 
 ## License
 AFL-3.0

@@ -144,5 +144,7 @@ If diff is a cached snapshot and it is not valid because new snapshot size is di
 ## Link
 Canvest example for pixi.js with TypeScript https://github.com/TyrealGray/canvest-pixi.js-example
 
+Canvest example for three.js https://github.com/TyrealGray/canvest-three.js-example
+
 ## License
 AFL-3.0

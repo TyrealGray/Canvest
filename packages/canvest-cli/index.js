@@ -30,5 +30,10 @@ const createScirpt = require('./src/createScirpt');
 
 	cmd.push(`" ${wdsRunCMD} ${wdsConfigCMD} "`);
 
-	await processUtil.processRun('concurrently', cmd, process.cwd());
+	try {
+		await processUtil.processRun('concurrently', cmd, process.cwd());
+	}catch (e) {
+		console.log(e);
+	}
+
 })();

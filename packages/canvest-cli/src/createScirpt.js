@@ -32,7 +32,7 @@ const createInitScript = (cachePort, isTS = null) => {
 	}
 	canvestFiles.map((canvestFile) => {
 		const filePath = canvestFile.replace(processFiles,'.canvest');
-		importTests += `import '${path.join(process.cwd(),filePath)}';`;
+		importTests += `import '${path.join(process.cwd(),filePath).replace(/\\/g, '/')}';`;
 	});
 
 	const runContent = `${importTests}

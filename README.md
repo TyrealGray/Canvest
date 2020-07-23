@@ -25,24 +25,30 @@ Create a script in your package.json
 ## Usage example
 If you just want to test a canvas
 ```javascript
-let canvas = document.createElement('canvas');
-canvas.width = 800;
-canvas.height = 600;
-const a = await snapshot(canvas);
-const context = canvas.getContext('2d');
-context.fillStyle = '#ff0';
-context.fillRect(0, 0, 800, 600);
+describe('Test my canvas', () => {
 
-const text = 'Hello, World!';
+	it('should render hello world text in canvas', async () => {
+		let canvas = document.createElement('canvas');
+		canvas.width = 800;
+		canvas.height = 600;
+		const a = await snapshot(canvas);
+		const context = canvas.getContext('2d');
+		context.fillStyle = '#ff0';
+		context.fillRect(0, 0, 800, 600);
 
-context.font = 'bold 70pt Menlo';
-context.textAlign = 'center';
-context.fillStyle = '#fff';
-context.fillText(text, 200, 200);
+		const text = 'Hello, World!';
 
-const b = await snapshot(canvas);
-a.notEqual(b);
-await autoShot('test', canvas); // this create a snapshot in local that will check canvas image to test if it is still the same
+		context.font = 'bold 70pt Menlo';
+		context.textAlign = 'center';
+		context.fillStyle = '#fff';
+		context.fillText(text, 200, 200);
+
+		const b = await snapshot(canvas);
+		a.notEqual(b);
+		await autoShot('test', canvas); // this create a snapshot in local that will check canvas image to test if it is still the same
+	});
+	
+});
 ```
 Or test the class you create, for example for `pixi.js`
 ```javascript

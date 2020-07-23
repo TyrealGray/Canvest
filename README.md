@@ -23,7 +23,7 @@ Create a script in your package.json
 ```
 
 ## Usage example
-If you just want to test a canvas
+If you just want to test a canvas, create `helloworld.canvest.js` under `./canvest` folder
 ```javascript
 describe('Test my canvas', () => {
 

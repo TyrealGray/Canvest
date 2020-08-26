@@ -18,6 +18,8 @@
     "canvest.config.js"
   ],
   "scripts": {
+    "cov": "nyc report --reporter=html --temp-dir=./coverage",
+    "instr": "nyc instrument ./canvest ./instrumentCanvest",
     "build": "exit 0",
     "dev": "node index.js --ts ./tsconfig.json --ci ./canvest",
     "lint": "exit 0",
@@ -51,11 +53,15 @@
     "concurrently": "^5.2.0",
     "core-js": "^3.6.0",
     "fs-extra": "^9.0.0",
+    "nyc": "^15.1.0",
     "pixelmatch": "^5.2.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "ws": "^7.2.5",
     "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "pixi.js": "^5.3.3"
   }
 }

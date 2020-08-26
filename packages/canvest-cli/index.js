@@ -32,6 +32,7 @@ const createScirpt = require('./src/createScirpt');
 
 	try {
 		await processUtil.processRun('concurrently', cmd, process.cwd());
+		console.log('done');
 	}catch (e) {
 		console.log(e);
 	}

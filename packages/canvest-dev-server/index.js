@@ -4,13 +4,49 @@ const path = require('path');
 const argv = require('yargs').argv;
 const PNG = require('pngjs').PNG;
 const pixelmatch = require('pixelmatch');
+const spawn = require('child_process').spawn;
 
 const fastify = require('fastify')();
+
+function processRun(prefix,cmd,cwd) {
+
+	return new Promise((resolve, reject) => {
+
+		const logger = spawn(prefix, cmd, {
+			cwd: cwd,
+			stdio: 'inherit',
+		});
+
+		logger.on('message',  (data) => {
+			process.stdout.clearLine();
+			process.stdout.cursorTo(0);
+			process.stdout.write(data);
+		});
+
+		logger.on('error',  (err) => {
+			reject(err);
+		});
+		logger.on('close',  (code) =>{
+			resolve(code);
+		});
+	});
+}
+
+async function processRunNode(cmd, cwd){
+
+	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : 'node';
+	let cmdArray = cmd;
+	if(/^win/.test(process.platform)){
+		cmdArray = ['node',...cmdArray];
+	}
+
+	return processRun(cmdHead,cmdArray, cwd);
+}
 
 let ciOutputPath = '';
 
 if (argv.ci) {
-	ciOutputPath = path.join(process.cwd(), argv.ci, 'canvest-test-result');
+	ciOutputPath = path.join(process.cwd(),  `${argv.ci}` === 'true'? 'canvest': argv.ci, 'canvest-test-result');
 	fs.ensureDirSync(ciOutputPath);
 }
 
@@ -26,9 +62,6 @@ fastify.ready((err) => {
 	console.log('｢cds｣ starting');
 
 	fastify.ws.on('connection', (socket) => {
-		if (!argv.ci) {
-			return;
-		}
 
 		let unfinishedTest = 0;
 		let testCloseTimer = null;
@@ -208,6 +241,13 @@ const createCoverageJson = async (coverageJson) => {
 	await fs.ensureFileSync(jsonPath);
 
 	await fs.writeFileSync(jsonPath, coverageJson);
+
+	const coverageCmd = [`./node_modules/nyc/bin/nyc.js report --reporter=html --temp-dir=${path.join(
+		process.cwd(),
+		'./coverage',
+	)}`];
+
+	await processRunNode(coverageCmd, process.cwd());
 };
 
 fastify.listen(argv.port ? argv.port : 45670);

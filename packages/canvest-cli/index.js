@@ -37,8 +37,7 @@ const createScirpt = require('./src/createScirpt');
 
 	try {
 		await processUtil.processRunConcurrently(cmd, process.cwd());
-		await processUtil.processRunNode(coverageCmd, process.cwd());
-		console.log('Cavest done!');
+		// await processUtil.processRunNode(coverageCmd, process.cwd());
 	}catch (e) {
 		console.log(e);
 	}

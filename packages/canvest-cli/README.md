@@ -158,6 +158,9 @@ set global threshold for snapshot comparision, if you just want one snapshot com
 
 - `number` threshold, a number that can be set to maximum `1.0`. Default is `0.05`, higher number will ignore more differences between snapshot comparision
 
+## Test Coverage
+Canvest will create test coverage after all test is done, you could find the `coverage.json` and/or open `index.html` under `./coverage` folder
+
 ## TypeScript
 To support TypeScript, you will need run `npm i @canvest/canvest-ts --save-dev` to install `canvest-ts` plugin
 

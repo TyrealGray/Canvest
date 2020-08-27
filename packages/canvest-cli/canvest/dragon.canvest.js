@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Dragon } from '../src/dragon';
+import { Dragon } from '../testSrc/dragon';
 
 describe('Dragon class', () => {
 

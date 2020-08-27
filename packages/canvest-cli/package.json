@@ -11,15 +11,13 @@
   "main": "index.js",
   "files": [
     "src",
-    "script",
+    "canvestInitScript",
     "mocha",
     "index.js",
     "index.html",
     "canvest.config.js"
   ],
   "scripts": {
-    "cov": "nyc report --reporter=html --temp-dir=./coverage",
-    "instr": "nyc instrument ./canvest ./instrumentCanvest",
     "build": "exit 0",
     "dev": "node index.js --ts ./tsconfig.json --ci ./canvest",
     "lint": "exit 0",
@@ -53,6 +51,7 @@
     "concurrently": "^5.2.0",
     "core-js": "^3.6.0",
     "fs-extra": "^9.0.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "nyc": "^15.1.0",
     "pixelmatch": "^5.2.0",
     "webpack": "^4.42.1",

@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Dragon } from '../src/tsDragon';
+import { Dragon } from '../testSrc/tsDragon';
 
 describe('Typescript test case', () => {
 

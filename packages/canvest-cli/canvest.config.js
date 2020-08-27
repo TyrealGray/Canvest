@@ -3,30 +3,29 @@ const fs = require('fs-extra');
 const chalk = require('chalk');
 const argv = require('yargs').argv;
 
-const isDev = !fs.existsSync(path.join(__dirname,'../../@canvest'));
+const isDev = !fs.existsSync(path.join(__dirname, '../../@canvest'));
 let canvestTSFolderPath = '';
 
 
-if(isDev){
-	canvestTSFolderPath = path.join(__dirname,'../canvest-ts');
+if (isDev) {
+	canvestTSFolderPath = path.join(__dirname, '../canvest-ts');
 }
 
 let canvestTS = null;
 
 try {
 	let canvestTSPath = '';
-	if(isDev){
+	if (isDev) {
 		canvestTSPath = canvestTSFolderPath;
-	}
-	else {
-		canvestTSPath = path.join(process.cwd(),'node_modules','@canvest/canvest-ts');
+	} else {
+		canvestTSPath = path.join(process.cwd(), 'node_modules', '@canvest/canvest-ts');
 	}
 
-	if(argv.ts){
+	if (argv.ts) {
 		canvestTS = fs.existsSync(canvestTSPath);
 	}
 
-}catch (e) {
+} catch (e) {
 	canvestTS = null;
 }
 
@@ -34,7 +33,17 @@ const rules = [];
 const extensions = ['*', '.js', '.jsx'];
 const plugins = [];
 
-if(canvestTS){
+rules.push({
+	test: /\.(js|jsx|ts|tsx)$/,
+	use: {
+		loader: 'istanbul-instrumenter-loader',
+		options: { esModules: true },
+	},
+	enforce: 'post',
+	exclude: /(node_modules|canvest-dev-server|canvestInitScript|\.canvest\.(js|ts|jsx|tsx))/,
+});
+
+if (canvestTS) {
 	console.log(chalk.yellow('loading ts-loader for Canvest'));
 
 	extensions.push('.tsx', '.ts');
@@ -42,46 +51,46 @@ if(canvestTS){
 		test: /\.tsx?$/,
 		use: [
 			{
-				loader: `${isDev? path.join(canvestTSFolderPath,'/node_modules/'):''}ts-loader`,
+				loader: `${isDev ? path.join(canvestTSFolderPath, '/node_modules/') : ''}ts-loader`,
 				options: {
-					transpileOnly: true
-				}
-			}
-		]
+					transpileOnly: true,
+				},
+			},
+		],
 	};
 
 	rules.push(tsLoaderRule);
 
 	let tsPluginPath = '';
-	if(isDev){
+	if (isDev) {
 		tsPluginPath = path.join(canvestTSFolderPath, 'node_modules/tsconfig-paths-webpack-plugin');
-	}else {
+	} else {
 		tsPluginPath = 'tsconfig-paths-webpack-plugin';
 	}
 
 	const TsconfigPathsPlugin = require(tsPluginPath);
 
-	plugins.push(new TsconfigPathsPlugin({ configFile: path.join(process.cwd(),argv.ts) }))
+	plugins.push(new TsconfigPathsPlugin({ configFile: path.join(process.cwd(), argv.ts) }));
 
 } else {
 	console.log(chalk.yellow('loading @babel/preset-env for Canvest'));
 	let defaultBabelOptions = {
 		presets: [
 			[
-				"@babel/preset-env",
+				'@babel/preset-env',
 				{
-					useBuiltIns: "usage",
-					corejs: 3
+					useBuiltIns: 'usage',
+					corejs: 3,
 				},
-			]
-		]
+			],
+		],
 	};
 
 	if (fs.existsSync(path.join(process.cwd(), '.babelrc'))) {
 		defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc')));
 	}
 
-	if(fs.existsSync(path.join(process.cwd(), '.babelrc.json'))) {
+	if (fs.existsSync(path.join(process.cwd(), '.babelrc.json'))) {
 		defaultBabelOptions = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.babelrc.json')));
 	}
 
@@ -97,12 +106,12 @@ if(canvestTS){
 
 const contentBase = [__dirname];
 
-if(__dirname !== process.cwd()){
+if (__dirname !== process.cwd()) {
 	contentBase.push(process.cwd());
 }
 
 module.exports = {
-	entry: [path.join(__dirname, './script/init.js'), path.join(__dirname, './script/run.js')],
+	entry: [path.join(__dirname, './canvestInitScript/init.js'), path.join(__dirname, './canvestInitScript/run.js')],
 	devtool: 'inline-source-map',
 	mode: 'development',
 	output: {
@@ -111,13 +120,13 @@ module.exports = {
 	},
 	devServer: {
 		contentBase: contentBase,
-		open: true
+		open: true,
 	},
 	module: {
-		rules
+		rules,
 	},
 	resolve: {
 		extensions,
-		plugins
+		plugins,
 	},
 };

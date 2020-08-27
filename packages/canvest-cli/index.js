@@ -13,7 +13,7 @@ const createScirpt = require('./src/createScirpt');
 
 	const cdsConfigCMD = `--port ${cachePort} ${
 		argv.ci ? `--ci ${argv.ci}` : ''
-	}`;
+		}`;
 
 	cmd.push(
 		`"node ./node_modules/@canvest/canvest-dev-server/index.js ${cdsConfigCMD}"`,
@@ -26,13 +26,19 @@ const createScirpt = require('./src/createScirpt');
 
 	const wdsConfigCMD = `${!argv.debug ? '--quiet' : ''} ${
 		argv.pagePort ? `--port ${argv.pagePort}` : ''
-	} ${argv.ts ? `--ts ${argv.ts}` : ''}`;
+		} ${argv.ts ? `--ts ${argv.ts}` : ''}`;
 
 	cmd.push(`" ${wdsRunCMD} ${wdsConfigCMD} "`);
 
+	const coverageCmd = [`./node_modules/nyc/bin/nyc.js report --reporter=html --temp-dir=${path.join(
+		process.cwd(),
+		'./coverage',
+	)}`];
+
 	try {
-		await processUtil.processRun('concurrently', cmd, process.cwd());
-		console.log('done');
+		await processUtil.processRunConcurrently(cmd, process.cwd());
+		await processUtil.processRunNode(coverageCmd, process.cwd());
+		console.log('Cavest done!');
 	}catch (e) {
 		console.log(e);
 	}

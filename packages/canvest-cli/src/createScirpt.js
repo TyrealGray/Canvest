@@ -24,7 +24,7 @@ function findInDir (dir, filter, fileList = []) {
 
 const createInitScript = (cachePort, isTS = null) => {
 	const processFiles = isTS? /\.canvest.(js|jsx|ts|tsx)$/ : /\.canvest.(js|jsx)$/;
-	const canvestFiles = findInDir(path.join(process.cwd(),'instrumentCanvest'), processFiles);
+	const canvestFiles = findInDir(path.join(process.cwd(),'canvest'), processFiles);
 
 	let importTests = '';
 	if(fs.existsSync(path.join(process.cwd(),'canvest',`canvest.init.${isTS?'ts':'js'}`))) {
@@ -38,7 +38,7 @@ const createInitScript = (cachePort, isTS = null) => {
 	const runContent = `${importTests}
 	initCanvest({cachePort:${cachePort}});`;
 
-	fs.writeFileSync(path.join(__dirname,'../script/run.js'), runContent);
+	fs.writeFileSync(path.join(__dirname,'../canvestInitScript/run.js'), runContent);
 };
 
 exports.createInitScript = createInitScript;

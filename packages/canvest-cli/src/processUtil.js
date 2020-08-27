@@ -1,16 +1,10 @@
 const spawn = require('child_process').spawn;
 
-function processRun(prefix, cmd, cwd){
-
-	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : prefix;
-	let cmdArray = cmd;
-	if(/^win/.test(process.platform)){
-		cmdArray = [prefix,...cmdArray];
-	}
+function processRun(prefix,cmd,cwd) {
 
 	return new Promise((resolve, reject) => {
 
-		const logger = spawn(cmdHead, cmdArray, {
+		const logger = spawn(prefix, cmd, {
 			cwd: cwd,
 			stdio: 'inherit',
 		});
@@ -30,9 +24,26 @@ function processRun(prefix, cmd, cwd){
 	});
 }
 
+function processRunConcurrently(cmd, cwd){
+
+	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : 'concurrently';
+	let cmdArray = cmd;
+	if(/^win/.test(process.platform)){
+		cmdArray = ['concurrently',...cmdArray];
+	}
+
+	return processRun(cmdHead, cmdArray,cwd);
+}
+
 async function processRunNode(cmd, cwd){
 
-	return processRun('node',cmd,cwd);
+	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : 'node';
+	let cmdArray = cmd;
+	if(/^win/.test(process.platform)){
+		cmdArray = ['node',...cmdArray];
+	}
+
+	return processRun(cmdHead,cmdArray, cwd);
 }
 
 async function processRunNPM(cmd, cwd){
@@ -42,6 +53,8 @@ async function processRunNPM(cmd, cwd){
 }
 
 exports.processRun = processRun;
+
+exports.processRunConcurrently = processRunConcurrently;
 
 exports.processRunNPM = processRunNPM;
 

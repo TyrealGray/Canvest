@@ -23,7 +23,36 @@ Create a script in your package.json
 ```
 
 ## Usage example
-Create your class
+If you just want to test a canvas, create `helloworld.canvest.js` under `./canvest` folder
+```javascript
+describe('Test my canvas', () => {
+
+	it('should render hello world text in canvas', async () => {
+		let canvas = document.createElement('canvas');
+		canvas.width = 800;
+		canvas.height = 600;
+		const a = await snapshot(canvas);
+		const context = canvas.getContext('2d');
+		context.fillStyle = '#ff0';
+		context.fillRect(0, 0, 800, 600);
+
+		const text = 'Hello, World!';
+
+		context.font = 'bold 70pt Menlo';
+		context.textAlign = 'center';
+		context.fillStyle = '#fff';
+		context.fillText(text, 200, 200);
+
+		const b = await snapshot(canvas);
+		
+		a.notEqual(b);// this should pass
+		
+		await autoShot('test', canvas); // this create a snapshot in local that will check canvas image to test if it is still the same
+	});
+	
+});
+```
+Or test the class you create, for example for `pixi.js`
 ```javascript
 export class MyClass
 {

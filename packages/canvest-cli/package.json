@@ -11,7 +11,7 @@
   "main": "index.js",
   "files": [
     "src",
-    "script",
+    "canvestInitScript",
     "mocha",
     "index.js",
     "index.html",
@@ -51,11 +51,16 @@
     "concurrently": "^5.2.0",
     "core-js": "^3.6.0",
     "fs-extra": "^9.0.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "nyc": "^15.1.0",
     "pixelmatch": "^5.2.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3",
     "ws": "^7.2.5",
     "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "pixi.js": "^5.3.3"
   }
 }

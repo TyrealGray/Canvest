@@ -39,6 +39,17 @@ fastify.ready((err) => {
 			if (typeof message === 'string') {
 				const testInfo = JSON.parse(message);
 
+				if(
+					testInfo.type === 'coverage'
+				) {
+					createCoverageJson(testInfo.data).then(()=>{
+						if(argv.ci) {
+							process.exit(testFailed);
+						}
+					});
+				}
+
+
 				if (testInfo.type === 'diff') {
 					testFailed++;
 					const dataURL = testInfo.data.replace(
@@ -87,7 +98,6 @@ fastify.ready((err) => {
 
 						if (!unfinishedTest && !testFailed) {
 							socket.send('test_end');
-							process.exit(0);
 						} else if(!unfinishedTest) {
 							socket.send('test_end_with_failed');
 							console.error(
@@ -95,7 +105,6 @@ fastify.ready((err) => {
 									testFailed > 1 ? 's' : ''
 									} failed, diff results output at ${argv.ci}`,
 							);
-							process.exit(1);
 						}
 					}, 5000);
 				}
@@ -187,5 +196,18 @@ fastify.route({
 		}
 	},
 });
+
+const createCoverageJson = async (coverageJson) => {
+
+	const jsonPath = path.join(
+		process.cwd(),
+		'coverage',
+		`coverage.json`,
+	);
+
+	await fs.ensureFileSync(jsonPath);
+
+	await fs.writeFileSync(jsonPath, coverageJson);
+};
 
 fastify.listen(argv.port ? argv.port : 45670);

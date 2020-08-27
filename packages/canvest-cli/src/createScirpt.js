@@ -38,7 +38,7 @@ const createInitScript = (cachePort, isTS = null) => {
 	const runContent = `${importTests}
 	initCanvest({cachePort:${cachePort}});`;
 
-	fs.writeFileSync(path.join(__dirname,'../script/run.js'), runContent);
+	fs.writeFileSync(path.join(__dirname,'../canvestInitScript/run.js'), runContent);
 };
 
 exports.createInitScript = createInitScript;

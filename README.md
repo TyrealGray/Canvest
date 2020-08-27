@@ -44,7 +44,9 @@ describe('Test my canvas', () => {
 		context.fillText(text, 200, 200);
 
 		const b = await snapshot(canvas);
-		a.notEqual(b);
+		
+		a.notEqual(b);// this should pass
+		
 		await autoShot('test', canvas); // this create a snapshot in local that will check canvas image to test if it is still the same
 	});
 	

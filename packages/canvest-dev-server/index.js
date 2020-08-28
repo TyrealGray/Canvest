@@ -4,18 +4,15 @@ const path = require('path');
 const argv = require('yargs').argv;
 const PNG = require('pngjs').PNG;
 const pixelmatch = require('pixelmatch');
-const spawn = require('child_process').spawn;
+const execFile = require('child_process').execFile;
 
 const fastify = require('fastify')();
 
-function processRun(prefix,cmd,cwd) {
+async function processRunNode(cmd, params){
 
 	return new Promise((resolve, reject) => {
 
-		const logger = spawn(prefix, cmd, {
-			cwd: cwd,
-			stdio: 'inherit',
-		});
+		const logger = execFile(cmd, params);
 
 		logger.on('message',  (data) => {
 			process.stdout.clearLine();
@@ -32,15 +29,15 @@ function processRun(prefix,cmd,cwd) {
 	});
 }
 
-async function processRunNode(cmd, cwd){
+async function processRunNYC(cmd, params) {
 
-	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : 'node';
-	let cmdArray = cmd;
+	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : cmd;
+	let cmdArray = params;
 	if(/^win/.test(process.platform)){
-		cmdArray = ['node',...cmdArray];
+		cmdArray = ['node', cmd, ...cmdArray];
 	}
 
-	return processRun(cmdHead,cmdArray, cwd);
+	return processRunNode(cmdHead, cmdArray);
 }
 
 let ciOutputPath = '';
@@ -242,12 +239,12 @@ const createCoverageJson = async (coverageJson) => {
 
 	await fs.writeFileSync(jsonPath, coverageJson);
 
-	const coverageCmd = [`./node_modules/nyc/bin/nyc.js report --reporter=html --temp-dir=${path.join(
+	const coverageCmd = [`report`,`--reporter=html`,`--temp-dir=${path.join(
 		process.cwd(),
 		'./coverage',
 	)}`];
 
-	await processRunNode(coverageCmd, process.cwd());
+	await processRunNYC(path.join(process.cwd(),'node_modules','nyc','bin','nyc.js'), coverageCmd);
 };
 
 fastify.listen(argv.port ? argv.port : 45670);

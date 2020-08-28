@@ -35,17 +35,6 @@ function processRunConcurrently(cmd, cwd){
 	return processRun(cmdHead, cmdArray,cwd);
 }
 
-async function processRunNode(cmd, cwd){
-
-	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : 'node';
-	let cmdArray = cmd;
-	if(/^win/.test(process.platform)){
-		cmdArray = ['node',...cmdArray];
-	}
-
-	return processRun(cmdHead,cmdArray, cwd);
-}
-
 async function processRunNPM(cmd, cwd){
 	const prefix = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
 
@@ -57,5 +46,3 @@ exports.processRun = processRun;
 exports.processRunConcurrently = processRunConcurrently;
 
 exports.processRunNPM = processRunNPM;
-
-exports.processRunNode = processRunNode;

@@ -30,14 +30,8 @@ const createScirpt = require('./src/createScirpt');
 
 	cmd.push(`" ${wdsRunCMD} ${wdsConfigCMD} "`);
 
-	const coverageCmd = [`./node_modules/nyc/bin/nyc.js report --reporter=html --temp-dir=${path.join(
-		process.cwd(),
-		'./coverage',
-	)}`];
-
 	try {
 		await processUtil.processRunConcurrently(cmd, process.cwd());
-		// await processUtil.processRunNode(coverageCmd, process.cwd());
 	}catch (e) {
 		console.log(e);
 	}

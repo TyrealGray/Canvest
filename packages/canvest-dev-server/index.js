@@ -84,25 +84,27 @@ fastify.ready((err) => {
 				if (testInfo.type === 'diff') {
 					testFailed++;
 
-					const createResultInFolder = (data, fileName) => {
-						const dataURL = data.replace(
-							/^data:image\/png;base64,/,
-							'',
-						);
-						const outputImagePath = path.join(
-							ciOutputPath,
-							fileName,
-						);
-						fs.writeFile(outputImagePath, dataURL, 'base64');
-					};
+					if (argv.ci) {
+						const createResultInFolder = (data, fileName) => {
+							const dataURL = data.replace(
+								/^data:image\/png;base64,/,
+								'',
+							);
+							const outputImagePath = path.join(
+								ciOutputPath,
+								fileName,
+							);
+							fs.writeFile(outputImagePath, dataURL, 'base64');
+						};
 
-					const { data, a, b } = testInfo;
+						const { data, a, b } = testInfo;
 
-					createResultInFolder(data, `test-${testFailed}.diff.png`);
+						createResultInFolder(data, `test-${testFailed}.diff.png`);
 
-					createResultInFolder(a, `test-${testFailed}.snapshot.png`);
+						createResultInFolder(a, `test-${testFailed}.snapshot.png`);
 
-					createResultInFolder(b, `test-${testFailed}.comparing.png`);
+						createResultInFolder(b, `test-${testFailed}.comparing.png`);
+					}
 				}
 
 				if (

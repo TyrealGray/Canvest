@@ -127,7 +127,10 @@ fastify.ready((err) => {
 						socket.send('test_end');
 						console.error('No test is running, at least create one test case to run.');
 
-						process.exit(0);
+						if(argv.ci){
+							process.exit(0);
+						}
+
 					}, 5000);
 				}
 
@@ -142,13 +145,19 @@ fastify.ready((err) => {
 
 						if (!unfinishedTest && !testFailed) {
 							socket.send('test_end');
+							if(argv.ci){
+								process.exit(0);
+							}
 						} else if (!unfinishedTest) {
 							socket.send('test_end_with_failed');
-							console.error(
-								`${testFailed} test${
-									testFailed > 1 ? 's' : ''
-									} failed, diff results output at ${argv.ci}`,
-							);
+							if(argv.ci){
+								console.error(
+									`${testFailed} test${
+										testFailed > 1 ? 's' : ''
+										} failed, diff results output at ${argv.ci}`,
+								);
+								process.exit(0);
+							}
 						}
 					}, 5000);
 				}
@@ -160,7 +169,7 @@ fastify.ready((err) => {
 			}
 		});
 
-		socket.on('close', () => console.log('Client disconnected.'));
+		socket.on('close', () => console.log('Test end, client disconnected.'));
 	});
 });
 
@@ -174,16 +183,18 @@ fastify.route({
 			/^data:image\/png;base64,/,
 			'',
 		);
-		try {
+		const imagePath = path.join(
+			process.cwd(),
+			'canvest',
+			'autoShot',
+			`${fileName}.png`,
+		);
 
-			const imagePath = path.join(
-				process.cwd(),
-				'canvest',
-				'autoShot',
-				`${fileName}.png`,
-			);
+		let cachedImageBuffer = null;
+
+		try {
 			let pass = false,
-				cachedImageBuffer = null;
+				diffImageBuffer = null;
 
 			if (!fs.existsSync(imagePath)) {
 				fs.ensureFileSync(imagePath);
@@ -192,7 +203,9 @@ fastify.route({
 			} else {
 				const buffer = Buffer.from(imageDataBase64, 'base64');
 
-				const snapShot = PNG.sync.read(fs.readFileSync(imagePath));
+				cachedImageBuffer = Buffer.from(fs.readFileSync(imagePath), 'base64');
+
+				const snapShot = PNG.sync.read(cachedImageBuffer);
 
 				const { width, height } = snapShot;
 
@@ -207,13 +220,13 @@ fastify.route({
 					{ threshold: req.body.threshold },
 				);
 
-				cachedImageBuffer = PNG.sync.write(diffImage);
+				diffImageBuffer = PNG.sync.write(diffImage);
 
 				pass = diff === 0;
 			}
 
-			const diffDataURL = cachedImageBuffer
-				? cachedImageBuffer.toString('base64')
+			const diffDataURL = diffImageBuffer
+				? diffImageBuffer.toString('base64')
 				: null;
 
 			if (!pass && argv.ci) {
@@ -228,10 +241,15 @@ fastify.route({
 					ciOutputPath,
 					`${fileName}.new.png`,
 				), imageDataBase64, 'base64');
+
+				fs.writeFileSync(path.join(
+					ciOutputPath,
+					`${fileName}.cache.png`,
+				), cachedImageBuffer, 'base64');
 			}
 
 			reply.type('application/json').code(200);
-			return { pass, dataURL: imageDataBase64, diffDataURL };
+			return { pass, dataURL: imageDataBase64, diffDataURL, cacheDataURL: cachedImageBuffer.toString('base64') };
 		} catch (e) {
 			console.log(e);
 			reply.type('application/json').code(500);
@@ -247,7 +265,7 @@ fastify.route({
 				), imageDataBase64, 'base64');
 			}
 
-			return { pass: false, dataURL: imageDataBase64, diffDataURL: null };
+			return { pass: false, dataURL: imageDataBase64, diffDataURL: null, cacheDataURL: cachedImageBuffer.toString('base64') };
 		}
 	},
 });

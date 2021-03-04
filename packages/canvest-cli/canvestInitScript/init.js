@@ -226,8 +226,8 @@ window.initCanvest = (config) => {
 
 			addingGroupSnapshotCanvasResult(
 				`(${name}) cached snapshot not match`,
+				`data:image/png;base64,${resJson.cacheDataURL}`,
 				`data:image/png;base64,${resJson.dataURL}`,
-				null,
 				resJson.dataURL? `data:image/png;base64,${resJson.diffDataURL}` : null,
 				canvasView.width,
 				canvasView.height,

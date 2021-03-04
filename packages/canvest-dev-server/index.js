@@ -8,22 +8,22 @@ const execFile = require('child_process').execFile;
 
 const fastify = require('fastify')();
 
-async function processRunNode(cmd, params){
+async function processRunNode(cmd, params) {
 
 	return new Promise((resolve, reject) => {
 
 		const logger = execFile(cmd, params);
 
-		logger.on('message',  (data) => {
+		logger.on('message', (data) => {
 			process.stdout.clearLine();
 			process.stdout.cursorTo(0);
 			process.stdout.write(data);
 		});
 
-		logger.on('error',  (err) => {
+		logger.on('error', (err) => {
 			reject(err);
 		});
-		logger.on('close',  (code) =>{
+		logger.on('close', (code) => {
 			resolve(code);
 		});
 	});
@@ -33,7 +33,7 @@ async function processRunNYC(cmd, params) {
 
 	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : cmd;
 	let cmdArray = params;
-	if(/^win/.test(process.platform)){
+	if (/^win/.test(process.platform)) {
 		cmdArray = ['node', cmd, ...cmdArray];
 	}
 
@@ -43,8 +43,9 @@ async function processRunNYC(cmd, params) {
 let ciOutputPath = '';
 
 if (argv.ci) {
-	ciOutputPath = path.join(process.cwd(),  `${argv.ci}` === 'true'? 'canvest': argv.ci, 'canvest-test-result');
+	ciOutputPath = path.join(process.cwd(), `${argv.ci}` === 'true' ? 'canvest' : argv.ci, 'canvest-test-result');
 	fs.ensureDirSync(ciOutputPath);
+	fs.emptyDirSync(ciOutputPath);
 }
 
 fastify.register(require('fastify-cors'), { origin: true });
@@ -69,11 +70,11 @@ fastify.ready((err) => {
 			if (typeof message === 'string') {
 				const testInfo = JSON.parse(message);
 
-				if(
+				if (
 					testInfo.type === 'coverage'
 				) {
-					createCoverageJson(testInfo.data).then(()=>{
-						if(argv.ci) {
+					createCoverageJson(testInfo.data).then(() => {
+						if (argv.ci) {
 							process.exit(testFailed);
 						}
 					});
@@ -82,15 +83,26 @@ fastify.ready((err) => {
 
 				if (testInfo.type === 'diff') {
 					testFailed++;
-					const dataURL = testInfo.data.replace(
-						/^data:image\/png;base64,/,
-						'',
-					);
-					const outputImagePath = path.join(
-						ciOutputPath,
-						`test-${testFailed}.diff.png`,
-					);
-					fs.writeFile(outputImagePath, dataURL, 'base64');
+
+					const createResultInFolder = (data, fileName) => {
+						const dataURL = data.replace(
+							/^data:image\/png;base64,/,
+							'',
+						);
+						const outputImagePath = path.join(
+							ciOutputPath,
+							fileName,
+						);
+						fs.writeFile(outputImagePath, dataURL, 'base64');
+					};
+
+					const { data, a, b } = testInfo;
+
+					createResultInFolder(data, `test-${testFailed}.diff.png`);
+
+					createResultInFolder(a, `test-${testFailed}.snapshot.png`);
+
+					createResultInFolder(b, `test-${testFailed}.comparing.png`);
 				}
 
 				if (
@@ -105,8 +117,8 @@ fastify.ready((err) => {
 					clearTimeout(testCloseTimer);
 					testCloseTimer = null;
 
-					setTimeout(()=>{
-						if(testStart) {
+					setTimeout(() => {
+						if (testStart) {
 							return;
 						}
 
@@ -128,7 +140,7 @@ fastify.ready((err) => {
 
 						if (!unfinishedTest && !testFailed) {
 							socket.send('test_end');
-						} else if(!unfinishedTest) {
+						} else if (!unfinishedTest) {
 							socket.send('test_end_with_failed');
 							console.error(
 								`${testFailed} test${
@@ -155,12 +167,12 @@ fastify.route({
 	url: '/shot',
 	handler: async (req, reply) => {
 		const fileName = req.body.name;
+		const imageDataURL = req.body.dataURL;
+		const imageDataBase64 = imageDataURL.replace(
+			/^data:image\/png;base64,/,
+			'',
+		);
 		try {
-			const imageDataURL = req.body.dataURL;
-			const imageDataBase64 = imageDataURL.replace(
-				/^data:image\/png;base64,/,
-				'',
-			);
 
 			const imagePath = path.join(
 				process.cwd(),
@@ -198,20 +210,26 @@ fastify.route({
 				pass = diff === 0;
 			}
 
-			const dataURL = cachedImageBuffer
+			const diffDataURL = cachedImageBuffer
 				? cachedImageBuffer.toString('base64')
 				: null;
 
 			if (!pass && argv.ci) {
-				const outputImagePath = path.join(
+
+				const outputDiffPath = path.join(
 					ciOutputPath,
 					`${fileName}.diff.png`,
 				);
-				fs.writeFileSync(outputImagePath, dataURL, 'base64');
+				fs.writeFileSync(outputDiffPath, diffDataURL, 'base64');
+
+				fs.writeFileSync(path.join(
+					ciOutputPath,
+					`${fileName}.new.png`,
+				), imageDataBase64, 'base64');
 			}
 
 			reply.type('application/json').code(200);
-			return { pass, dataURL };
+			return { pass, dataURL: imageDataBase64, diffDataURL };
 		} catch (e) {
 			console.log(e);
 			reply.type('application/json').code(500);
@@ -220,9 +238,14 @@ fastify.route({
 				fs.ensureFileSync(
 					path.join(ciOutputPath, `${fileName}.diff.failed`),
 				);
+
+				fs.writeFileSync(path.join(
+					ciOutputPath,
+					`${fileName}.new.png`,
+				), imageDataBase64, 'base64');
 			}
 
-			return { pass: false, dataURL: null };
+			return { pass: false, dataURL: imageDataBase64, diffDataURL: null };
 		}
 	},
 });
@@ -239,12 +262,12 @@ const createCoverageJson = async (coverageJson) => {
 
 	await fs.writeFileSync(jsonPath, coverageJson);
 
-	const coverageCmd = [`report`,`--reporter=html`,`--temp-dir=${path.join(
+	const coverageCmd = [`report`, `--reporter=html`, `--temp-dir=${path.join(
 		process.cwd(),
 		'./coverage',
 	)}`];
 
-	await processRunNYC(path.join(process.cwd(),'node_modules','nyc','bin','nyc.js'), coverageCmd);
+	await processRunNYC(path.join(process.cwd(), 'node_modules', 'nyc', 'bin', 'nyc.js'), coverageCmd);
 };
 
 fastify.listen(argv.port ? argv.port : 45670);

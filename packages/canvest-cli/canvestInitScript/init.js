@@ -5,7 +5,23 @@ let canvestReady = false,
 	socketInitFailed = false,
 	threshold = 0.05;
 
-const autoAddingDiffCanvas = (title, dataURL, w, h) => {
+const addingGroupSnapshotCanvasResult = (title, dataURLA, dataURLB, dataURLDiff, w, h) => {
+	const spanGroup = document.createElement('span');
+	spanGroup.style = 'float:left; padding: 0 10px 0 10px;';
+	const div = document.createElement('div');
+	const text = document.createTextNode(title);
+	div.style = 'text-align: center; background: red; border-radius:10px';
+	div.appendChild(text);
+	spanGroup.appendChild(div);
+	document.body.appendChild(spanGroup);
+
+
+	createSnapshotCanvas('snapshot', dataURLA, w, h, spanGroup);
+	createSnapshotCanvas('diff', dataURLDiff, w, h, spanGroup);
+	createSnapshotCanvas('comparing snapshot', dataURLB, w, h, spanGroup);
+};
+
+const createSnapshotCanvas = (title, dataURL, w, h, element) => {
 	const canvas = document.createElement('canvas');
 	canvas.width = 300;
 	canvas.height = canvas.width / (w / h);
@@ -22,13 +38,13 @@ const autoAddingDiffCanvas = (title, dataURL, w, h) => {
 		div.appendChild(text);
 		span.appendChild(div);
 		span.appendChild(canvas);
-		document.body.appendChild(span);
+		element.appendChild(span);
 	};
 
 	img.src = dataURL;
 };
 
-const outputDiff = (a, b, w, h, socket) => {
+const outputSnapshot = (a, b, w, h, socket, caseTitle, outputDiff) => {
 	const diffCanvas = document.createElement('canvas');
 	diffCanvas.width = w;
 	diffCanvas.height = h;
@@ -39,9 +55,11 @@ const outputDiff = (a, b, w, h, socket) => {
 	pixelmatch(a.imageData, b.imageData, diff.data, w, h, { threshold: 0.05 });
 	diffContext.putImageData(diff, 0, 0);
 
-	autoAddingDiffCanvas(
-		'failed test diff',
-		diffCanvas.toDataURL('image/png'),
+	addingGroupSnapshotCanvasResult(
+		caseTitle,
+		a.dataURL,
+		b.dataURL,
+		outputDiff? diffCanvas.toDataURL('image/png') : null,
 		w,
 		h,
 	);
@@ -49,7 +67,7 @@ const outputDiff = (a, b, w, h, socket) => {
 	if (!socketInitFailed) {
 		socket.send(
 			JSON.stringify({
-				type: 'diff', data: diffCanvas.toDataURL('image/png'),
+				type: 'diff', data: diffCanvas.toDataURL('image/png'), a: a.dataURL, b: b.dataURL,
 			}),
 		);
 	}
@@ -113,12 +131,14 @@ window.initCanvest = (config) => {
 		capture.isEqual = (otherCapture) => {
 			const result = capture.equal(otherCapture, threshold);
 			if (!result) {
-				outputDiff(
+				outputSnapshot(
 					capture,
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
 					socket,
+					'isEqual failed',
+					true
 				);
 			}
 
@@ -128,12 +148,14 @@ window.initCanvest = (config) => {
 		capture.notEqual = (otherCapture) => {
 			const result = capture.equal(otherCapture, threshold);
 			if (result) {
-				outputDiff(
+				outputSnapshot(
 					capture,
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
 					socket,
+					'notEqual failed',
+					false
 				);
 			}
 
@@ -143,12 +165,14 @@ window.initCanvest = (config) => {
 		capture.isMatch = (otherCapture, rate) => {
 			const result = capture.match(otherCapture, rate, threshold);
 			if (!result) {
-				outputDiff(
+				outputSnapshot(
 					capture,
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
 					socket,
+					'isMatch failed',
+					true
 				);
 			}
 			assert(result, `snapshot is not match, expect to be match`);
@@ -158,12 +182,14 @@ window.initCanvest = (config) => {
 			const result = capture.match(otherCapture, rate, threshold);
 
 			if (result) {
-				outputDiff(
+				outputSnapshot(
 					capture,
 					otherCapture,
 					canvasView.width,
 					canvasView.height,
 					socket,
+					'notMatch failed',
+					false
 				);
 			}
 			assert(!result, `snapshot is match, expect to be not match`);
@@ -198,14 +224,16 @@ window.initCanvest = (config) => {
 				);
 			}
 
-			if (resJson.dataURL) {
-				autoAddingDiffCanvas(
-					`(${name}) cached diff`,
-					`data:image/png;base64,${resJson.dataURL}`,
-					canvasView.width,
-					canvasView.height,
-				);
+			addingGroupSnapshotCanvasResult(
+				`(${name}) cached snapshot not match`,
+				`data:image/png;base64,${resJson.dataURL}`,
+				null,
+				resJson.dataURL? `data:image/png;base64,${resJson.diffDataURL}` : null,
+				canvasView.width,
+				canvasView.height,
+			);
 
+			if (resJson.diffDataURL) {
 				assert(
 					false,
 					`new (${name}) snapshot is not match cached snapshot`,

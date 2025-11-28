@@ -31,10 +31,10 @@ async function processRunNode(cmd, params) {
 
 async function processRunNYC(cmd, params) {
 
-	let cmdHead = /^win/.test(process.platform) ? 'powershell.exe' : cmd;
+	let cmdHead = /^win/.test(process.platform) ? 'cmd.exe' : cmd;
 	let cmdArray = params;
 	if (/^win/.test(process.platform)) {
-		cmdArray = ['node', cmd, ...cmdArray];
+		cmdArray = ['/c', 'npx', cmd, ...cmdArray];
 	}
 
 	return processRunNode(cmdHead, cmdArray);

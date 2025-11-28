@@ -110,7 +110,8 @@ window.initCanvest = (config) => {
 		switch (event.data) {
 			case 'test_end':
 			case 'test_end_with_failed':
-				socket.send(JSON.stringify({type: 'coverage', data: JSON.stringify(window.__coverage__)}));
+				// TODO: fix coverage issue
+				// socket.send(JSON.stringify({type: 'coverage', data: JSON.stringify(window.__coverage__)}));
 				endDiv = document.createElement('div');
 				endDiv.className = event.data;
 				document.body.appendChild(endDiv);

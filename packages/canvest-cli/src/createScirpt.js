@@ -20,9 +20,7 @@ function findInDir(dir, filter, fileList = []) {
 }
 
 function toWebPath(absFilePath) {
-  // Convert absolute file path -> browser-safe path
-  const relToProject = path.relative(process.cwd(), absFilePath);
-  return '/' + relToProject.split(path.sep).join('/');
+  return absFilePath.split(path.sep).join('/');
 }
 
 const createInitScript = (cachePort, isTS = null) => {

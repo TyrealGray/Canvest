@@ -19,8 +19,6 @@ const createScript = require('./src/createScirpt');
   );
 
   // 3. Vite Dev Server (replacement for webpack)
-  const vitePkg = require("vite/package.json");
-  const viteBin = require.resolve(path.join("vite", vitePkg.bin.vite));
   const viteConfig = path.join(__dirname, './canvest.config.js');
 
   // Instead of unsupported `--env`, pass variables via process.env
@@ -31,7 +29,7 @@ const createScript = require('./src/createScirpt');
     VITE_CACHE_PORT: String(cachePort),
   };
 
-  const viteCmd = `node "${viteBin}" --config "${viteConfig}" --open`;
+  const viteCmd = `npx vite --config "${viteConfig}" --open`;
 
   // 4. Instead of adding env vars inline (hard on Windows), inject them in processUtil
   cmd.push(`"${viteCmd}"`);

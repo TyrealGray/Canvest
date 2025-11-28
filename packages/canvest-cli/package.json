@@ -41,12 +41,8 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/polyfill": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
     "@canvest/canvest-core": "1.1.0",
     "@canvest/canvest-dev-server": "1.2.4",
-    "babel-loader": "^8.0.6",
     "chalk": "^4.0.0",
     "concurrently": "^5.2.0",
     "core-js": "^3.6.0",
@@ -54,9 +50,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "nyc": "^15.1.0",
     "pixelmatch": "^5.2.0",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
+    "vite": "^6.3.0",
     "ws": "^7.2.5",
     "yargs": "^15.3.1"
   },

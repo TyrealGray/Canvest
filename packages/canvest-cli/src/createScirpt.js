@@ -1,44 +1,59 @@
 const path = require('path');
 const fs = require('fs-extra');
 
-function findInDir (dir, filter, fileList = []) {
-	const files = fs.readdirSync(dir);
+function findInDir(dir, filter, fileList = []) {
+  if (!fs.existsSync(dir)) return fileList;
+  const files = fs.readdirSync(dir);
 
-	files.forEach((file) => {
-		const filePath = path.join(dir, file);
-		const fileStat = fs.lstatSync(filePath);
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const stat = fs.lstatSync(filePath);
 
-		if (fileStat.isDirectory()) {
-			findInDir(filePath, filter, fileList);
-		} else if (filter.test(filePath)) {
-			let relativePath = filePath.replace(process.cwd(),'');
+    if (stat.isDirectory()) {
+      findInDir(filePath, filter, fileList);
+    } else if (filter.test(filePath)) {
+      fileList.push(filePath);
+    }
+  });
 
-			fileList.push(relativePath);
-		}
-	});
-
-	return fileList;
+  return fileList;
 }
 
-
+function toWebPath(absFilePath) {
+  // Convert absolute file path -> browser-safe path
+  const relToProject = path.relative(process.cwd(), absFilePath);
+  return '/' + relToProject.split(path.sep).join('/');
+}
 
 const createInitScript = (cachePort, isTS = null) => {
-	const processFiles = isTS? /\.canvest.(js|jsx|ts|tsx)$/ : /\.canvest.(js|jsx)$/;
-	const canvestFiles = findInDir(path.join(process.cwd(),'canvest'), processFiles);
+  const processFiles = isTS
+    ? /\.canvest\.(ts|tsx)$/
+    : /\.canvest\.(js|jsx)$/;
 
-	let importTests = '';
-	if(fs.existsSync(path.join(process.cwd(),'canvest',`canvest.init.${isTS?'ts':'js'}`))) {
-		importTests += `import '${path.join(process.cwd(),'canvest','canvest.init')}';`;
-	}
-	canvestFiles.map((canvestFile) => {
-		const filePath = canvestFile.replace(processFiles,'.canvest');
-		importTests += `import '${path.join(process.cwd(),filePath).replace(/\\/g, '/')}';`;
-	});
+  const canvestDir = path.join(process.cwd(), 'canvest');
+  const canvestFiles = findInDir(canvestDir, processFiles);
 
-	const runContent = `${importTests}
-	initCanvest({cachePort:${cachePort}});`;
+  let importTests = '';
 
-	fs.writeFileSync(path.join(__dirname,'../canvestInitScript/run.js'), runContent);
+  // import canvest.init.js or .ts if exists
+  const initPath = path.join(
+    canvestDir,
+    `canvest.init.${isTS ? 'ts' : 'js'}`
+  );
+  if (fs.existsSync(initPath)) {
+    importTests += `import '${toWebPath(initPath)}';\n`;
+  }
+
+  // import all .canvest.* files
+  for (const file of canvestFiles) {
+    importTests += `import '${toWebPath(file)}';\n`;
+  }
+
+  const runContent = `${importTests}
+initCanvest({ cachePort: ${cachePort} });`;
+
+  const outputFile = path.join(__dirname, '../canvestInitScript/run.js');
+  fs.writeFileSync(outputFile, runContent);
 };
 
 exports.createInitScript = createInitScript;

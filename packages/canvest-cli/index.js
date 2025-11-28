@@ -2,38 +2,42 @@
 const path = require('path');
 const argv = require('yargs').argv;
 const processUtil = require('./src/processUtil');
-const createScirpt = require('./src/createScirpt');
+const createScript = require('./src/createScirpt');
 
 (async () => {
-	const cachePort = argv.cachePort ? argv.cachePort : 45670;
+  const cachePort = argv.cachePort ? argv.cachePort : 45670;
 
-	createScirpt.createInitScript(cachePort, argv.ts);
+  // 1. Generate run.js before starting servers
+  createScript.createInitScript(cachePort, argv.ts);
 
-	const cmd = ['--kill-others'];
+  const cmd = ['--kill-others'];
 
-	const cdsConfigCMD = `--port ${cachePort} ${
-		argv.ci ? `--ci ${argv.ci}` : ''
-		}`;
+  // 2. Canvest Dev Server
+  const cdsConfigCMD = `--port ${cachePort} ${argv.ci ? `--ci ${argv.ci}` : ''}`;
+  cmd.push(
+    `"node ./node_modules/@canvest/canvest-dev-server/index.js ${cdsConfigCMD}"`
+  );
 
-	cmd.push(
-		`"node ./node_modules/@canvest/canvest-dev-server/index.js ${cdsConfigCMD}"`,
-	);
+  // 3. Vite Dev Server (replacement for webpack)
+  const viteBin = path.join(__dirname, './node_modules/vite/bin/vite.js');
+  const viteConfig = path.join(__dirname, './canvest.config.js');
 
-	const wdsRunCMD = `node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config ${path.join(
-		__dirname,
-		'./canvest.config.js',
-	)}`;
+  // Instead of unsupported `--env`, pass variables via process.env
+  const viteEnv = {
+    ...process.env,
+    VITE_DEBUG: argv.debug ? 'true' : 'false',
+    VITE_PAGE_PORT: argv.pagePort || '',
+    VITE_CACHE_PORT: String(cachePort),
+  };
 
-	const wdsConfigCMD = `${!argv.debug ? '--quiet' : ''} ${
-		argv.pagePort ? `--port ${argv.pagePort}` : ''
-		} ${argv.ts ? `--ts ${argv.ts}` : ''}`;
+  const viteCmd = `node "${viteBin}" --config "${viteConfig}" --open`;
 
-	cmd.push(`" ${wdsRunCMD} ${wdsConfigCMD} "`);
+  // 4. Instead of adding env vars inline (hard on Windows), inject them in processUtil
+  cmd.push(`"${viteCmd}"`);
 
-	try {
-		await processUtil.processRunConcurrently(cmd, process.cwd());
-	}catch (e) {
-		console.log(e);
-	}
-
+  try {
+    await processUtil.processRunConcurrently(cmd, process.cwd(), viteEnv);
+  } catch (e) {
+    console.error(e);
+  }
 })();

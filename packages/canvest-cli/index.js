@@ -19,7 +19,8 @@ const createScript = require('./src/createScirpt');
   );
 
   // 3. Vite Dev Server (replacement for webpack)
-  const viteBin = path.join(__dirname, './node_modules/vite/bin/vite.js');
+  const vitePkg = require("vite/package.json");
+  const viteBin = require.resolve(path.join("vite", vitePkg.bin.vite));
   const viteConfig = path.join(__dirname, './canvest.config.js');
 
   // Instead of unsupported `--env`, pass variables via process.env

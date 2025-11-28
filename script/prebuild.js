@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const packages = ['canvest-cli','canvest-core','canvest-dev-server','canvest-ts'];
+const packages = ['canvest-cli','canvest-core','canvest-dev-server'];
 const files = ['LICENSE', 'README.md'];
 
 packages.forEach(packageName => {

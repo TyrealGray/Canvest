@@ -159,12 +159,12 @@ set global threshold for snapshot comparision, if you just want one snapshot com
 - `number` threshold, a number that can be set to maximum `1.0`. Default is `0.05`, higher number will ignore more differences between snapshot comparision
 
 ## Test Coverage
-Canvest will create test coverage after all test is done, you could find the `coverage.json` and/or open `index.html` under `./coverage` folder
+~~Canvest will create test coverage after all test is done, you could find the `coverage.json` and/or open `index.html` under `./coverage` folder~~ 
+
+(broken currently, because of node update, will fix in the future)
 
 ## TypeScript
-~~To support TypeScript, you will need run `npm i @canvest/canvest-ts --save-dev` to install `canvest-ts` plugin~~ (might no longer needed to do these steps)
-
-Then using `canvest --ts `~~./path-to-your-tsconfig.json~~ to start testing
+Using `canvest --ts` to start testing
 
 ## Integrate with CI
 If you want to run with headless browser in CI, you could use `--ci` option. This will make Canvest exit when all tests are done, and add a div inside web page `<body>` with className `test_end` or `test_end_with_failed`.

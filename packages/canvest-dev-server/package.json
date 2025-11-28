@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "exit 0",
+    "lint": "exit 0",
     "prepublishOnly": "npm run build"
   },
   "author": "TyrealGray",

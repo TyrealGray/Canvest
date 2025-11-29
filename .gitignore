@@ -5,6 +5,6 @@ coverage
 *.log
 packages/canvest-cli/bin
 packages/canvest-core/bin
-packages/canvest-cli/script/run.js
+packages/canvest-cli/canvestInitScript/run.js
 autoShot
 canvest-test-result

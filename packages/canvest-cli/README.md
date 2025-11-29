@@ -121,7 +121,7 @@ Canvest-cli will start two node servers, to config the port you could change npm
   },
 ```
 - `cachePort`: this is the port that canvest-cli using to start the node server to cache your snapshot, default is `45670`.
-- `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `webapck-dev-server` under the hood.
+- `pagePort`: this is the port that canvest-cli using to start the web page to run your unit test with `Mocha`, running `vite` under the hood.
 
 ## Result
 If some test case failed, you will see diff comparison under bottom showing in highlight red color.
@@ -159,7 +159,7 @@ set global threshold for snapshot comparision, if you just want one snapshot com
 - `number` threshold, a number that can be set to maximum `1.0`. Default is `0.05`, higher number will ignore more differences between snapshot comparision
 
 ## Test Coverage
-~~Canvest will create test coverage after all test is done, you could find the `coverage.json` and/or open `index.html` under `./coverage` folder~~ 
+Canvest will create test coverage after all test is done, you could find the `coverage.json` and/or open `index.html` under `./coverage` folder
 
 (broken currently, because of node update, will fix in the future)
 

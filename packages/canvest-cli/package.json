@@ -1,6 +1,6 @@
 {
   "name": "@canvest/canvest-cli",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "publishConfig": {
     "access": "public"
   },
@@ -40,8 +40,8 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
-    "@canvest/canvest-core": "1.3.1",
-    "@canvest/canvest-dev-server": "1.3.2",
+    "@canvest/canvest-core": "1.3.4",
+    "@canvest/canvest-dev-server": "1.3.4",
     "chalk": "^4.0.0",
     "concurrently": "^5.2.0",
     "fs-extra": "^9.0.0",

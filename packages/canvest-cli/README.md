@@ -161,8 +161,6 @@ set global threshold for snapshot comparision, if you just want one snapshot com
 ## Test Coverage
 Canvest will create test coverage after all test is done, you could find the `coverage.json` and/or open `index.html` under `./coverage` folder
 
-(broken currently, because of node update, will fix in the future)
-
 ## TypeScript
 Using `canvest --ts` to start testing
 

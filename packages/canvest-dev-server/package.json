@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/TyrealGray/Canvest#readme",
   "dependencies": {
-    "fastify": "^2.14.0",
+    "fastify": "^5.6.2",
     "fastify-cors": "^3.0.3",
     "fastify-ws": "^1.0.3",
     "fs-extra": "^9.0.0",

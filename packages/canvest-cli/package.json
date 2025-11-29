@@ -15,7 +15,7 @@
     "mocha",
     "index.js",
     "index.html",
-    "canvest.config.js"
+    "canvest.config.mjs"
   ],
   "scripts": {
     "build": "exit 0",

@@ -7,7 +7,7 @@ export class Dragon {
 	public sprite: PIXI.Sprite;
 
 	constructor(container){
-		this.sprite = new Sprite(Texture.from('../testRes/dragon.png'));
+		this.sprite = new Sprite(Texture.from('./dragon.png'));
 		this.sprite.anchor.x = 0.5;
 		this.sprite.anchor.y = 0.5;
 		this.sprite.x = 400;

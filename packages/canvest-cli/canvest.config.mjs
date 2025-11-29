@@ -1,6 +1,8 @@
-const path = require('path');
-const fs = require('fs');
+// vite.config.mjs
+import path from 'node:path';
+import fs from 'node:fs';
 import { defineConfig, loadEnv } from 'vite';
+import istanbul from 'vite-plugin-istanbul';
 
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), '');
@@ -41,7 +43,11 @@ export default defineConfig(({ mode }) => {
 						});
 					}
 				}
-			}
+			},
+			istanbul({
+				exclude: ['canvest/'],
+				extension: ['.js', '.ts', '.canvest']
+			}),
 		],
 	};
 });

@@ -44,7 +44,7 @@ describe('Typescript test case', () => {
 
 		const renderNo2 = await snapshot(app.view);
 
-		renderNo1.notEqual(renderNo2);
+		renderNo1.isEqual(renderNo2);
 
 	});
 });

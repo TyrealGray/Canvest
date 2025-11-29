@@ -1,44 +1,11 @@
 #!/usr/bin/env node
+const NYC = require('nyc');
 const fs = require('fs-extra');
 const path = require('path');
 const argv = require('yargs').argv;
 const PNG = require('pngjs').PNG;
 const pixelmatch = require('pixelmatch');
-const execFile = require('child_process').execFile;
-
 const fastify = require('fastify')();
-
-async function processRunNode(cmd, params) {
-
-	return new Promise((resolve, reject) => {
-
-		const logger = execFile(cmd, params);
-
-		logger.on('message', (data) => {
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(data);
-		});
-
-		logger.on('error', (err) => {
-			reject(err);
-		});
-		logger.on('close', (code) => {
-			resolve(code);
-		});
-	});
-}
-
-async function processRunNYC(cmd, params) {
-
-	let cmdHead = /^win/.test(process.platform) ? 'cmd.exe' : cmd;
-	let cmdArray = params;
-	if (/^win/.test(process.platform)) {
-		cmdArray = ['/c', 'npx', cmd, ...cmdArray];
-	}
-
-	return processRunNode(cmdHead, cmdArray);
-}
 
 let ciOutputPath = '';
 
@@ -73,11 +40,7 @@ fastify.ready((err) => {
 				if (
 					testInfo.type === 'coverage'
 				) {
-					createCoverageJson(testInfo.data).then(() => {
-						if (argv.ci) {
-							process.exit(testFailed);
-						}
-					});
+					createCoverageJson(testInfo.data);
 				}
 
 
@@ -127,7 +90,7 @@ fastify.ready((err) => {
 						socket.send('test_end');
 						console.error('No test is running, at least create one test case to run.');
 
-						if(argv.ci){
+						if (argv.ci) {
 							process.exit(0);
 						}
 
@@ -145,16 +108,15 @@ fastify.ready((err) => {
 
 						if (!unfinishedTest && !testFailed) {
 							socket.send('test_end');
-							if(argv.ci){
+							if (argv.ci) {
 								process.exit(0);
 							}
 						} else if (!unfinishedTest) {
 							socket.send('test_end_with_failed');
-							if(argv.ci){
+							if (argv.ci) {
 								console.error(
-									`${testFailed} test${
-										testFailed > 1 ? 's' : ''
-										} failed, diff results output at ${argv.ci}`,
+									`${testFailed} test${testFailed > 1 ? 's' : ''
+									} failed, diff results output at ${argv.ci}`,
 								);
 								process.exit(0);
 							}
@@ -282,12 +244,19 @@ const createCoverageJson = async (coverageJson) => {
 
 	await fs.writeFileSync(jsonPath, coverageJson);
 
-	const coverageCmd = [`report`, `--reporter=html`, `--temp-dir=${path.join(
+	const reportDir = path.join(
 		process.cwd(),
-		'./coverage',
-	)}`];
+		'coverage',
+	);
 
-	await processRunNYC(path.join(process.cwd(), 'node_modules', 'nyc', 'bin', 'nyc.js'), coverageCmd);
+	const nyc = new NYC({
+		tempDir: reportDir,     
+		reporter: ['html', 'text-summary'],       
+		reportDir: reportDir,      
+		cwd: process.cwd(),                       
+	});
+
+	await nyc.report();
 };
 
 fastify.listen(argv.port ? argv.port : 45670);

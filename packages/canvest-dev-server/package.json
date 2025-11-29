@@ -26,6 +26,7 @@
     "fastify-cors": "^3.0.3",
     "fastify-ws": "^1.0.3",
     "fs-extra": "^9.0.0",
+    "nyc": "^17.1.0",
     "pixelmatch": "^5.2.0",
     "pngjs": "^5.0.0",
     "yargs": "^15.3.1"

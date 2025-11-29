@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 
 export class Dragon {
 	constructor(container){
-		this.sprite = new PIXI.Sprite(PIXI.Texture.from('../testRes/dragon.png'));
+		this.sprite = new PIXI.Sprite(PIXI.Texture.from('./dragon.png'));
 		this.sprite.anchor.x = 0.5;
 		this.sprite.anchor.y = 0.5;
 		this.sprite.x = 400;

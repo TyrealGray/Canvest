@@ -91,7 +91,6 @@ window.initCanvest = (config) => {
 		});
 
 		after(() => {
-			console.log('coverage', window.__coverage__);
 			socket.send(JSON.stringify({type: 'coverage', data: JSON.stringify(window.__coverage__)}));
 			socket.send(
 				JSON.stringify({

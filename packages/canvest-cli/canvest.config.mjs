@@ -45,8 +45,8 @@ export default defineConfig(({ mode }) => {
 				}
 			},
 			istanbul({
-				exclude: ['canvest/'],
-				extension: ['.js', '.ts', '.canvest']
+				exclude: ['canvest/', 'node_modules/'],
+				extension: ['.js', '.ts']
 			}),
 		],
 	};
